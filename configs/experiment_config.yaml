@@ -1,0 +1,86 @@
+project:
+  name: "fairness-aware-semantic-resume-ranking"
+  version: "1.0.0"
+  description: "Auditing Utility, Fairness, and Robustness on Resume-Job Fit and PopResume"
+
+seeds:
+  primary: 17
+  secondary: 29
+
+data:
+  resume_job_fit:
+    dataset_name: "cnamuangtoun/resume-job-description-fit"
+    raw_path: "data/raw/resume_job_fit"
+    processed_path: "data/processed/resume_job_fit"
+    split_ratio:
+      train: 0.70
+      val: 0.15
+      test: 0.15
+    occupations_codebook: "data/manifests/soc_codebook.yaml"
+    holdout_gate_min_queries: 20
+    test_min_eligible_queries: 30
+    min_pool_size: 10
+  pop_resume:
+    dataset_name: "sumin-yu/PopResume"
+    raw_path: "data/raw/pop_resume"
+    processed_path: "data/processed/pop_resume"
+    num_profiles: 60884
+    occupations:
+      - "accountants/auditors"
+      - "construction laborers"
+      - "elementary/middle school teachers"
+      - "registered nurses"
+      - "software developers"
+
+stimuli:
+  groups:
+    - "Black_female"
+    - "Black_male"
+    - "White_female"
+    - "White_male"
+  names_per_group:
+    train: 20
+    val: 10
+    test: 10
+    total: 40
+  pool_composition:
+    balanced:
+      Black_female: 0.25
+      Black_male: 0.25
+      White_female: 0.25
+      White_male: 0.25
+    skewed_70_30_black:
+      Black_female: 0.35
+      Black_male: 0.35
+      White_female: 0.15
+      White_male: 0.15
+    skewed_70_30_white:
+      Black_female: 0.15
+      Black_male: 0.15
+      White_female: 0.35
+      White_male: 0.35
+
+models:
+  bm25:
+    k1: 1.2
+    b: 0.75
+  sbert:
+    model_name: "sentence-transformers/all-mpnet-base-v2"
+    chunk_overlap: 50
+    normalize_embeddings: true
+  cda:
+    learning_rate: 2.0e-5
+    effective_batch_size: 32
+    weight_decay: 0.01
+    epochs: 2
+    alpha_grid: [0.1, 1.0, 10.0]
+    utility_loss_tolerance: 0.02
+  reranker:
+    lambda_grid: [0.0, 0.1, 1.0, 10.0]
+    cutoff_k: 10
+    utility_loss_tolerance: 0.02
+
+statistical:
+  bootstrap_replicates: 5000
+  alpha_familywise: 0.05
+  primary_cutoff_k: 10

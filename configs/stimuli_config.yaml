@@ -1,0 +1,19 @@
+# Configuration for Stage 2 Stimuli Manifest and Rendering Templates
+
+templates:
+  train:
+    id: "top_name_line"
+    description: "A top name line format used strictly for training"
+    format: "{candidate_name}\n\n{resume_text}"
+  val:
+    id: "labeled_contact_header"
+    description: "A labeled contact header format used strictly for validation"
+    format: "Applicant Name: {candidate_name}\nContact: candidate@audit-study.org\n---\n{resume_text}"
+  test:
+    id: "name_below_summary"
+    description: "A name line below an otherwise unchanged summary for test evaluation"
+    format: "PROFESSIONAL SUMMARY\nExperienced Candidate Profile\nCandidate: {candidate_name}\n\n{resume_text}"
+
+redaction:
+  neutral_token: "[CANDIDATE_NAME]"
+  format: "{neutral_token}\n\n{resume_text}"

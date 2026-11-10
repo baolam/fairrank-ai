@@ -1,0 +1,25 @@
+Candidate: Sarah McCarthy
+Location: Seattle, WA
+Email: sarah.mccarthy@cloudtech.dev | Phone: (206) 555-0192
+
+Summary:
+Full-Stack Python Engineer with 6+ years of experience building distributed microservices, REST APIs, and scalable web architectures. Proven background in Docker containerization, PostgreSQL database optimization, and CI/CD pipelines.
+
+Technical Skills:
+- Languages: Python, JavaScript, TypeScript, SQL
+- Frameworks: FastAPI, Django, Flask, React
+- Cloud & DevOps: Docker, Kubernetes, AWS, Git, CI/CD
+- Databases: PostgreSQL, Redis, SQLite
+
+Professional Experience:
+Senior Software Engineer | CloudTech Solutions (2022 - Present)
+- Architected high-throughput REST APIs handling 5M daily requests using FastAPI and PostgreSQL.
+- Orchestrated container deployment pipelines with Docker and AWS ECS.
+- Improved database query performance by 40% through indexing and caching with Redis.
+
+Software Engineer | Apex Digital (2018 - 2022)
+- Developed full-stack applications with React frontend and Django backend.
+- Managed automated testing suites and CI/CD integration using GitHub Actions.
+
+Education:
+B.S. in Computer Science | University of Washington

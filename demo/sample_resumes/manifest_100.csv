@@ -1,0 +1,101 @@
+index,id,name,group,relevance_grade,target_role,experience_years,filename,skills_count
+1,cand_001,Lakisha Washington,Black_female,2,Senior Full-Stack Python Engineer,6.0,cv_001_bf_lakisha_washington.pdf,16
+2,cand_002,Latoya Jefferson,Black_female,2,Senior Backend Systems Engineer,5.0,cv_002_bf_latoya_jefferson.pdf,18
+3,cand_003,Tamika Jackson,Black_female,2,Staff Cloud & Distributed Systems Engineer,7.0,cv_003_bf_tamika_jackson.pdf,16
+4,cand_004,Keisha Robinson,Black_female,2,Lead Platform & Python Engineer,6.0,cv_004_bf_keisha_robinson.pdf,16
+5,cand_005,Ebony Williams,Black_female,2,Senior Machine Learning & Python Engineer,5.0,cv_005_bf_ebony_williams.pdf,17
+6,cand_006,Shaniqua Harris,Black_female,2,Senior DevOps & Site Reliability Engineer,6.0,cv_006_bf_shaniqua_harris.pdf,16
+7,cand_007,Tanisha Davis,Black_female,2,Distributed Data Platform Engineer,5.0,cv_007_bf_tanisha_davis.pdf,17
+8,cand_008,Aaliyah Johnson,Black_female,2,Senior Microservices & API Architect,7.0,cv_008_bf_aaliyah_johnson.pdf,16
+9,cand_009,Deja Brown,Black_female,2,Senior Python & Database Optimization Engineer,6.0,cv_009_bf_deja_brown.pdf,16
+10,cand_010,Precious Jones,Black_female,2,Staff Software Engineer (Python & Cloud),8.0,cv_010_bf_precious_jones.pdf,16
+11,cand_011,Kenya Thomas,Black_female,1,Python & Flask Backend Developer,3.0,cv_011_bf_kenya_thomas.pdf,13
+12,cand_012,Diamond Wilson,Black_female,1,Frontend Developer with Python Scripting,4.0,cv_012_bf_diamond_wilson.pdf,13
+13,cand_013,Asia Taylor,Black_female,1,QA Automation & Test Engineer (Python),3.0,cv_013_bf_asia_taylor.pdf,12
+14,cand_014,Tierra Anderson,Black_female,1,Data Analyst & Python Developer,3.0,cv_014_bf_tierra_anderson.pdf,13
+15,cand_015,Jada Jackson,Black_female,1,Junior Full-Stack Web Developer,2.0,cv_015_bf_jada_jackson.pdf,13
+16,cand_016,Imani White,Black_female,1,Junior Backend Developer (Django & SQL),2.0,cv_016_bf_imani_white.pdf,11
+17,cand_017,Raven Harris,Black_female,1,Systems Administrator & Automation Scripter,4.0,cv_017_bf_raven_harris.pdf,10
+18,cand_018,Chantel Martin,Black_female,1,Application Support Engineer (Python & SQL),3.0,cv_018_bf_chantel_martin.pdf,11
+19,cand_019,Kendra Thompson,Black_female,0,Certified Public Accountant (CPA),6.0,cv_019_bf_kendra_thompson.pdf,11
+20,cand_020,Nia Garcia,Black_female,0,Senior Digital Marketing Strategist,4.0,cv_020_bf_nia_garcia.pdf,12
+21,cand_021,Tia Robinson,Black_female,0,Customer Success & Client Account Manager,5.0,cv_021_bf_tia_robinson.pdf,11
+22,cand_022,Monique Clark,Black_female,0,Secondary STEM & Science Educator,6.0,cv_022_bf_monique_clark.pdf,9
+23,cand_023,Dominique Lewis,Black_female,0,Human Resources & Talent Acquisition Specialist,5.0,cv_023_bf_dominique_lewis.pdf,11
+24,cand_024,Brittany Lee,Black_female,0,Healthcare & Clinical Operations Coordinator,5.0,cv_024_bf_brittany_lee.pdf,11
+25,cand_025,Jasmine Walker,Black_female,0,Supply Chain & Logistics Operations Manager,6.0,cv_025_bf_jasmine_walker.pdf,11
+26,cand_026,Jamal Washington,Black_male,2,Senior Full-Stack Python Engineer,6.0,cv_026_bm_jamal_washington.pdf,16
+27,cand_027,Darnell Jefferson,Black_male,2,Senior Backend Systems Engineer,5.0,cv_027_bm_darnell_jefferson.pdf,18
+28,cand_028,Tremayne Jackson,Black_male,2,Staff Cloud & Distributed Systems Engineer,7.0,cv_028_bm_tremayne_jackson.pdf,16
+29,cand_029,DeAndre Robinson,Black_male,2,Lead Platform & Python Engineer,6.0,cv_029_bm_deandre_robinson.pdf,16
+30,cand_030,Tyrone Williams,Black_male,2,Senior Machine Learning & Python Engineer,5.0,cv_030_bm_tyrone_williams.pdf,17
+31,cand_031,Malik Harris,Black_male,2,Senior DevOps & Site Reliability Engineer,6.0,cv_031_bm_malik_harris.pdf,16
+32,cand_032,Terrence Davis,Black_male,2,Distributed Data Platform Engineer,5.0,cv_032_bm_terrence_davis.pdf,17
+33,cand_033,Marquis Johnson,Black_male,2,Senior Microservices & API Architect,7.0,cv_033_bm_marquis_johnson.pdf,16
+34,cand_034,Kareem Brown,Black_male,2,Senior Python & Database Optimization Engineer,6.0,cv_034_bm_kareem_brown.pdf,16
+35,cand_035,Darius Jones,Black_male,2,Staff Software Engineer (Python & Cloud),8.0,cv_035_bm_darius_jones.pdf,16
+36,cand_036,Xavier Thomas,Black_male,1,Python & Flask Backend Developer,3.0,cv_036_bm_xavier_thomas.pdf,13
+37,cand_037,Hakim Wilson,Black_male,1,Frontend Developer with Python Scripting,4.0,cv_037_bm_hakim_wilson.pdf,13
+38,cand_038,Jermaine Taylor,Black_male,1,QA Automation & Test Engineer (Python),3.0,cv_038_bm_jermaine_taylor.pdf,12
+39,cand_039,Rashad Anderson,Black_male,1,Data Analyst & Python Developer,3.0,cv_039_bm_rashad_anderson.pdf,13
+40,cand_040,Trevon Jackson,Black_male,1,Junior Full-Stack Web Developer,2.0,cv_040_bm_trevon_jackson.pdf,13
+41,cand_041,Kendrick White,Black_male,1,Junior Backend Developer (Django & SQL),2.0,cv_041_bm_kendrick_white.pdf,11
+42,cand_042,Hakeem Harris,Black_male,1,Systems Administrator & Automation Scripter,4.0,cv_042_bm_hakeem_harris.pdf,10
+43,cand_043,Deshawn Martin,Black_male,1,Application Support Engineer (Python & SQL),3.0,cv_043_bm_deshawn_martin.pdf,11
+44,cand_044,Donte Thompson,Black_male,0,Certified Public Accountant (CPA),6.0,cv_044_bm_donte_thompson.pdf,11
+45,cand_045,Jabari Garcia,Black_male,0,Senior Digital Marketing Strategist,4.0,cv_045_bm_jabari_garcia.pdf,12
+46,cand_046,Lamar Robinson,Black_male,0,Customer Success & Client Account Manager,5.0,cv_046_bm_lamar_robinson.pdf,11
+47,cand_047,Montrell Clark,Black_male,0,Secondary STEM & Science Educator,6.0,cv_047_bm_montrell_clark.pdf,9
+48,cand_048,Rakeem Lewis,Black_male,0,Human Resources & Talent Acquisition Specialist,5.0,cv_048_bm_rakeem_lewis.pdf,11
+49,cand_049,Tevin Lee,Black_male,0,Healthcare & Clinical Operations Coordinator,5.0,cv_049_bm_tevin_lee.pdf,11
+50,cand_050,Daquan Walker,Black_male,0,Supply Chain & Logistics Operations Manager,6.0,cv_050_bm_daquan_walker.pdf,11
+51,cand_051,Emily Miller,White_female,2,Senior Full-Stack Python Engineer,6.0,cv_051_wf_emily_miller.pdf,16
+52,cand_052,Anne Murphy,White_female,2,Senior Backend Systems Engineer,5.0,cv_052_wf_anne_murphy.pdf,18
+53,cand_053,Jill Sullivan,White_female,2,Staff Cloud & Distributed Systems Engineer,7.0,cv_053_wf_jill_sullivan.pdf,16
+54,cand_054,Allison Walsh,White_female,2,Lead Platform & Python Engineer,6.0,cv_054_wf_allison_walsh.pdf,16
+55,cand_055,Laurie O'Brien,White_female,2,Senior Machine Learning & Python Engineer,5.0,cv_055_wf_laurie_o_brien.pdf,17
+56,cand_056,Sarah McCarthy,White_female,2,Senior DevOps & Site Reliability Engineer,6.0,cv_056_wf_sarah_mccarthy.pdf,16
+57,cand_057,Meredith Ryan,White_female,2,Distributed Data Platform Engineer,5.0,cv_057_wf_meredith_ryan.pdf,17
+58,cand_058,Carrie Meyer,White_female,2,Senior Microservices & API Architect,7.0,cv_058_wf_carrie_meyer.pdf,16
+59,cand_059,Kristen Schmidt,White_female,2,Senior Python & Database Optimization Engineer,6.0,cv_059_wf_kristen_schmidt.pdf,16
+60,cand_060,Megan Wagner,White_female,2,Staff Software Engineer (Python & Cloud),8.0,cv_060_wf_megan_wagner.pdf,16
+61,cand_061,Heather Becker,White_female,1,Python & Flask Backend Developer,3.0,cv_061_wf_heather_becker.pdf,13
+62,cand_062,Claire Snyder,White_female,1,Frontend Developer with Python Scripting,4.0,cv_062_wf_claire_snyder.pdf,13
+63,cand_063,Abigail Weber,White_female,1,QA Automation & Test Engineer (Python),3.0,cv_063_wf_abigail_weber.pdf,12
+64,cand_064,Amy Bauer,White_female,1,Data Analyst & Python Developer,3.0,cv_064_wf_amy_bauer.pdf,13
+65,cand_065,Emma Mueller,White_female,1,Junior Full-Stack Web Developer,2.0,cv_065_wf_emma_mueller.pdf,13
+66,cand_066,Holly Schultz,White_female,1,Junior Backend Developer (Django & SQL),2.0,cv_066_wf_holly_schultz.pdf,11
+67,cand_067,Hannah Hoffman,White_female,1,Systems Administrator & Automation Scripter,4.0,cv_067_wf_hannah_hoffman.pdf,10
+68,cand_068,Kathryn Klein,White_female,1,Application Support Engineer (Python & SQL),3.0,cv_068_wf_kathryn_klein.pdf,11
+69,cand_069,Rachel Becker,White_female,0,Certified Public Accountant (CPA),6.0,cv_069_wf_rachel_becker.pdf,11
+70,cand_070,Carly Schneider,White_female,0,Senior Digital Marketing Strategist,4.0,cv_070_wf_carly_schneider.pdf,12
+71,cand_071,Bethany Keller,White_female,0,Customer Success & Client Account Manager,5.0,cv_071_wf_bethany_keller.pdf,11
+72,cand_072,Caitlin Zimmerman,White_female,0,Secondary STEM & Science Educator,6.0,cv_072_wf_caitlin_zimmerman.pdf,9
+73,cand_073,Madeline Hartman,White_female,0,Human Resources & Talent Acquisition Specialist,5.0,cv_073_wf_madeline_hartman.pdf,11
+74,cand_074,Brooke Schmidt,White_female,0,Healthcare & Clinical Operations Coordinator,5.0,cv_074_wf_brooke_schmidt.pdf,11
+75,cand_075,Paige Frank,White_female,0,Supply Chain & Logistics Operations Manager,6.0,cv_075_wf_paige_frank.pdf,11
+76,cand_076,Brad Miller,White_male,2,Senior Full-Stack Python Engineer,6.0,cv_076_wm_brad_miller.pdf,16
+77,cand_077,Matthew Murphy,White_male,2,Senior Backend Systems Engineer,5.0,cv_077_wm_matthew_murphy.pdf,18
+78,cand_078,Todd Sullivan,White_male,2,Staff Cloud & Distributed Systems Engineer,7.0,cv_078_wm_todd_sullivan.pdf,16
+79,cand_079,Geoffrey Walsh,White_male,2,Lead Platform & Python Engineer,6.0,cv_079_wm_geoffrey_walsh.pdf,16
+80,cand_080,Brett O'Brien,White_male,2,Senior Machine Learning & Python Engineer,5.0,cv_080_wm_brett_o_brien.pdf,17
+81,cand_081,Paul McCarthy,White_male,2,Senior DevOps & Site Reliability Engineer,6.0,cv_081_wm_paul_mccarthy.pdf,16
+82,cand_082,Neil Ryan,White_male,2,Distributed Data Platform Engineer,5.0,cv_082_wm_neil_ryan.pdf,17
+83,cand_083,Douglas Meyer,White_male,2,Senior Microservices & API Architect,7.0,cv_083_wm_douglas_meyer.pdf,16
+84,cand_084,Connor Schmidt,White_male,2,Senior Python & Database Optimization Engineer,6.0,cv_084_wm_connor_schmidt.pdf,16
+85,cand_085,Jack Wagner,White_male,2,Staff Software Engineer (Python & Cloud),8.0,cv_085_wm_jack_wagner.pdf,16
+86,cand_086,Cole Becker,White_male,1,Python & Flask Backend Developer,3.0,cv_086_wm_cole_becker.pdf,13
+87,cand_087,Logan Snyder,White_male,1,Frontend Developer with Python Scripting,4.0,cv_087_wm_logan_snyder.pdf,13
+88,cand_088,Garrett Weber,White_male,1,QA Automation & Test Engineer (Python),3.0,cv_088_wm_garrett_weber.pdf,12
+89,cand_089,Cody Bauer,White_male,1,Data Analyst & Python Developer,3.0,cv_089_wm_cody_bauer.pdf,13
+90,cand_090,Hunter Mueller,White_male,1,Junior Full-Stack Web Developer,2.0,cv_090_wm_hunter_mueller.pdf,13
+91,cand_091,Dustin Schultz,White_male,1,Junior Backend Developer (Django & SQL),2.0,cv_091_wm_dustin_schultz.pdf,11
+92,cand_092,Wyatt Hoffman,White_male,1,Systems Administrator & Automation Scripter,4.0,cv_092_wm_wyatt_hoffman.pdf,10
+93,cand_093,Trevor Klein,White_male,1,Application Support Engineer (Python & SQL),3.0,cv_093_wm_trevor_klein.pdf,11
+94,cand_094,Colin Becker,White_male,0,Certified Public Accountant (CPA),6.0,cv_094_wm_colin_becker.pdf,11
+95,cand_095,Lucas Schneider,White_male,0,Senior Digital Marketing Strategist,4.0,cv_095_wm_lucas_schneider.pdf,12
+96,cand_096,Spencer Keller,White_male,0,Customer Success & Client Account Manager,5.0,cv_096_wm_spencer_keller.pdf,11
+97,cand_097,Graham Zimmerman,White_male,0,Secondary STEM & Science Educator,6.0,cv_097_wm_graham_zimmerman.pdf,9
+98,cand_098,Grant Hartman,White_male,0,Human Resources & Talent Acquisition Specialist,5.0,cv_098_wm_grant_hartman.pdf,11
+99,cand_099,Tanner Schmidt,White_male,0,Healthcare & Clinical Operations Coordinator,5.0,cv_099_wm_tanner_schmidt.pdf,11
+100,cand_100,Carson Frank,White_male,0,Supply Chain & Logistics Operations Manager,6.0,cv_100_wm_carson_frank.pdf,11

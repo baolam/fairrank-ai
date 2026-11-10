@@ -1,0 +1,16 @@
+llm:
+  default_provider: "gemini"  # gemini, openai, or custom
+  providers:
+    gemini:
+      model: "gemini-2.5-flash"
+      temperature: 0.0
+      timeout_seconds: 30
+      max_retries: 3
+    openai:
+      model: "gpt-4o-mini"
+      temperature: 0.0
+      timeout_seconds: 30
+      max_retries: 3
+  scoring_prompt_version: "v1"
+  explanation_prompt_version: "v1"
+  batch_concurrency: 5

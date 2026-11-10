@@ -1,0 +1,24 @@
+Candidate: Jamal Washington
+Location: Atlanta, GA
+Email: jamal.washington@devworks.io | Phone: (404) 555-8831
+
+Summary:
+Senior Backend Systems Engineer with 5+ years of specialized experience in Python backend development, PostgreSQL, distributed messaging systems, and containerized architectures on GCP.
+
+Technical Skills:
+- Languages: Python, Go, SQL, Bash
+- Frameworks & Tools: FastAPI, Flask, Docker, Kubernetes, Celery, Kafka
+- Databases & Cloud: PostgreSQL, MongoDB, Redis, GCP (Google Cloud), CI/CD
+
+Work History:
+Senior Backend Engineer | DataForge Corp (2021 - Present)
+- Engineered real-time asynchronous data pipelines using Python, FastAPI, and Kafka.
+- Reduced API p99 latency from 450ms to 85ms by re-architecting PostgreSQL schemas and query execution plans.
+- Led migration of 12 internal microservices to Docker containers on GCP.
+
+Backend Developer | Nexus Systems (2019 - 2021)
+- Built robust RESTful APIs with Python and Flask.
+- Maintained CI/CD deployment workflows and unit test coverage above 90%.
+
+Education:
+B.S. in Software Engineering | Georgia Institute of Technology
