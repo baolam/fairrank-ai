@@ -37,37 +37,37 @@ export function RankingResultsView({ ranking, cutoffK, lambdaVal }: RankingResul
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-base font-semibold text-gray-900">📊 Ranking Performance & Algorithmic Parity</h3>
+        <h3 className="text-base font-semibold text-fr-ink">Ranking performance &amp; algorithmic parity</h3>
         <div className="mt-3 flex flex-wrap gap-3">
-          <MetricTile label="Utility (nDCG@10)" value={ranking.ndcg_at_k.toFixed(3)} />
-          <MetricTile label="MRR" value={ranking.mrr.toFixed(3)} />
-          <MetricTile label="B-W Exp Gap" value={ranking.black_white_exposure_gap.toFixed(4)} />
-          <MetricTile label="F-M Exp Gap" value={ranking.female_male_exposure_gap.toFixed(4)} />
-          <MetricTile label="Intersectional Excess (H5)" value={ranking.intersectional_excess.toFixed(4)} />
+          <MetricTile label="Utility (nDCG@10)" value={ranking.ndcg_at_k.toFixed(3)} axis="teal" />
+          <MetricTile label="MRR" value={ranking.mrr.toFixed(3)} axis="teal" />
+          <MetricTile label="B-W exposure gap" value={ranking.black_white_exposure_gap.toFixed(4)} axis="amber" />
+          <MetricTile label="F-M exposure gap" value={ranking.female_male_exposure_gap.toFixed(4)} axis="amber" />
+          <MetricTile label="Intersectional excess (H5)" value={ranking.intersectional_excess.toFixed(4)} axis="amber" />
         </div>
       </div>
 
       <div>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h3 className="text-base font-semibold text-gray-900">📋 Ranked Candidate Allocation</h3>
+          <h3 className="text-base font-semibold text-fr-ink">Ranked candidate allocation</h3>
           <button
             type="button"
-            className="text-sm font-medium text-brand-700 underline"
+            className="text-sm font-medium text-fr-teal hover:text-fr-ink"
             onClick={() => setShowFormulas((v) => !v)}
           >
-            {showFormulas ? 'Ẩn' : '🔬 Hiện'} chi tiết tính toán
+            {showFormulas ? 'Ẩn chi tiết tính toán' : 'Hiện chi tiết tính toán'}
           </button>
         </div>
-        <div className="mt-3 overflow-x-auto rounded-xl border border-gray-200">
-          <table className="min-w-full divide-y divide-gray-200 text-sm">
-            <thead className="bg-gray-50 text-left text-xs font-medium uppercase text-gray-500">
+        <div className="mt-3 overflow-x-auto rounded-md border border-fr-line">
+          <table className="min-w-full text-sm">
+            <thead className="border-b border-fr-line text-left text-[12px] font-medium text-fr-ink-soft">
               <tr>
                 <th className="px-4 py-2">Rank</th>
-                <th className="px-4 py-2">Candidate Name</th>
+                <th className="px-4 py-2">Candidate name</th>
                 <th className="px-4 py-2">Group</th>
-                <th className="px-4 py-2">Relevance Grade</th>
-                <th className="px-4 py-2">Score</th>
-                <th className="px-4 py-2">Exposure e(k)</th>
+                <th className="px-4 py-2">Relevance grade</th>
+                <th className="px-4 py-2 text-right">Score</th>
+                <th className="px-4 py-2 text-right">Exposure e(k)</th>
                 {showFormulas && (
                   <>
                     <th className="px-4 py-2">Cách tính chuẩn hoá</th>
@@ -76,21 +76,21 @@ export function RankingResultsView({ ranking, cutoffK, lambdaVal }: RankingResul
                 )}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-fr-line/60">
               {ranking.ranked_candidates.map((r) => (
                 <tr key={r.candidate_id}>
-                  <td className="px-4 py-2">{r.rank}</td>
-                  <td className="px-4 py-2">{r.candidate_name}</td>
-                  <td className="px-4 py-2">{GROUP_LABELS[r.group as keyof typeof GROUP_LABELS] ?? r.group}</td>
-                  <td className="px-4 py-2">{RELEVANCE_LABELS[r.relevance_grade]}</td>
-                  <td className="px-4 py-2">{r.raw_score.toFixed(3)}</td>
-                  <td className="px-4 py-2">{r.exposure_at_k.toFixed(3)}</td>
+                  <td className="fr-mono px-4 py-2 text-fr-ink-soft">{r.rank}</td>
+                  <td className="px-4 py-2 text-fr-ink">{r.candidate_name}</td>
+                  <td className="px-4 py-2 text-fr-ink-soft">{GROUP_LABELS[r.group as keyof typeof GROUP_LABELS] ?? r.group}</td>
+                  <td className="px-4 py-2 text-fr-ink-soft">{RELEVANCE_LABELS[r.relevance_grade]}</td>
+                  <td className="fr-mono px-4 py-2 text-right text-fr-ink">{r.raw_score.toFixed(3)}</td>
+                  <td className="fr-mono px-4 py-2 text-right text-fr-ink">{r.exposure_at_k.toFixed(3)}</td>
                   {showFormulas && (
                     <>
-                      <td className="px-4 py-2 font-mono text-xs text-gray-500">
+                      <td className="fr-mono px-4 py-2 text-xs text-fr-ink-soft">
                         {normalizationFormula(r.raw_score, r.normalized_score)}
                       </td>
-                      <td className="px-4 py-2 font-mono text-xs text-gray-500">{exposureFormula(r.rank)}</td>
+                      <td className="fr-mono px-4 py-2 text-xs text-fr-ink-soft">{exposureFormula(r.rank)}</td>
                     </>
                   )}
                 </tr>
@@ -101,8 +101,8 @@ export function RankingResultsView({ ranking, cutoffK, lambdaVal }: RankingResul
       </div>
 
       <div>
-        <h3 className="text-base font-semibold text-gray-900">📈 Group Allocation Breakdown</h3>
-        <div className="mt-3 rounded-xl border border-gray-200 bg-white p-2">
+        <h3 className="text-base font-semibold text-fr-ink">Group allocation breakdown</h3>
+        <div className="mt-3 rounded-md border border-fr-line bg-white p-2">
           <GroupExposureBarChart summaries={ranking.group_summaries} />
         </div>
       </div>

@@ -6,10 +6,10 @@ import { CounterfactualTab } from '../tabs/CounterfactualTab'
 import { ComplianceReportTab } from '../tabs/ComplianceReportTab'
 
 const VIEWS = [
-  { id: 'ranking', label: '📊 Kết quả Ranking' },
-  { id: 'pareto', label: '⚖️ Pareto Frontier' },
-  { id: 'counterfactual', label: '🔍 Counterfactual Audit' },
-  { id: 'report', label: '📑 Compliance Report' },
+  { id: 'ranking', label: 'Kết quả Ranking' },
+  { id: 'pareto', label: 'Pareto Frontier' },
+  { id: 'counterfactual', label: 'Counterfactual Audit' },
+  { id: 'report', label: 'Compliance Report' },
 ] as const
 
 export function ResultsCompareStep() {
@@ -26,37 +26,37 @@ export function ResultsCompareStep() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">📈 Bước 3 · Kết quả &amp; So sánh</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="text-base font-semibold text-fr-ink">Bước 3 · Kết quả &amp; so sánh</h2>
+          <p className="mt-1 text-sm text-fr-ink-soft">
             So sánh hiệu suất xếp hạng, đánh đổi công bằng/tiện ích, và kiểm chứng thiên lệch nhân khẩu học.
           </p>
         </div>
         <div className="flex gap-2">
           <button
             type="button"
-            className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="rounded-md border border-fr-line px-3 py-1.5 text-sm font-medium text-fr-ink-soft hover:border-fr-teal hover:text-fr-teal transition-colors"
             onClick={() => setStep(2)}
           >
             ← Chạy cấu hình khác
           </button>
           <button
             type="button"
-            className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="rounded-md border border-fr-line px-3 py-1.5 text-sm font-medium text-fr-ink-soft hover:border-fr-teal hover:text-fr-teal transition-colors"
             onClick={restartAtStep1}
           >
-            🔄 Chạy lại từ đầu
+            Chạy lại từ đầu
           </button>
         </div>
       </div>
 
-      <nav className="flex flex-wrap gap-2 border-b border-gray-200">
+      <nav className="flex flex-wrap gap-5 border-b border-fr-line">
         {VIEWS.map((v) => (
           <button
             key={v.id}
             type="button"
             onClick={() => setView(v.id)}
-            className={`rounded-t-lg px-4 py-2.5 text-sm font-medium transition-colors ${
-              view === v.id ? 'border-b-2 border-brand-600 text-brand-700' : 'text-gray-500 hover:text-gray-800'
+            className={`-mb-px border-b-2 px-0.5 py-2.5 text-sm font-medium transition-colors ${
+              view === v.id ? 'border-fr-teal text-fr-teal' : 'border-transparent text-fr-ink-soft hover:text-fr-ink'
             }`}
           >
             {v.label}

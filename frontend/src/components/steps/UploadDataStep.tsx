@@ -57,26 +57,26 @@ export function UploadDataStep() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-gray-900">📁 Bước 1 · Upload dữ liệu</h2>
-        <p className="text-sm text-gray-500">
+        <h2 className="text-base font-semibold text-fr-ink">Bước 1 · Upload dữ liệu</h2>
+        <p className="mt-1 text-sm text-fr-ink-soft">
           Nhập mô tả công việc (JD) và nạp hồ sơ ứng viên — dùng bộ mẫu kiểm định sẵn hoặc upload file CV thật.
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="space-y-3">
-          <label className="block text-sm font-medium text-gray-700">
-            Target Job Title
+          <label className="block text-sm font-medium text-fr-ink-soft">
+            Target job title
             <input
-              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+              className="mt-1 w-full rounded-md border border-fr-line bg-white px-3 py-2 text-sm text-fr-ink focus:border-fr-teal focus:outline-none"
               value={jobTitle}
               onChange={(e) => setJobInputs(e.target.value, jobDescription)}
             />
           </label>
-          <label className="block text-sm font-medium text-gray-700">
-            Job Description Requirements
+          <label className="block text-sm font-medium text-fr-ink-soft">
+            Job description requirements
             <textarea
-              className="mt-1 h-44 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+              className="mt-1 h-44 w-full rounded-md border border-fr-line bg-white px-3 py-2 text-sm text-fr-ink focus:border-fr-teal focus:outline-none"
               value={jobDescription}
               onChange={(e) => setJobInputs(jobTitle, e.target.value)}
             />
@@ -84,26 +84,27 @@ export function UploadDataStep() {
         </div>
 
         <div className="space-y-3">
-          <div className="flex gap-2 text-sm font-medium text-gray-700">
+          <div className="flex gap-2 text-sm font-medium">
             <button
               type="button"
-              className={`rounded-full border px-3 py-1.5 ${source === 'sample' ? 'border-brand-600 bg-brand-50 text-brand-700' : 'border-gray-300 text-gray-600'}`}
+              className={`rounded-md border px-3 py-1.5 transition-colors ${source === 'sample' ? 'border-fr-teal bg-fr-teal-soft text-fr-teal' : 'border-fr-line text-fr-ink-soft'}`}
               onClick={() => handleSourceChange('sample')}
             >
-              Balanced Audit Pool (12 Synthetic Profiles)
+              Balanced audit pool (12 synthetic profiles)
             </button>
             <button
               type="button"
-              className={`rounded-full border px-3 py-1.5 ${source === 'upload' ? 'border-brand-600 bg-brand-50 text-brand-700' : 'border-gray-300 text-gray-600'}`}
+              className={`rounded-md border px-3 py-1.5 transition-colors ${source === 'upload' ? 'border-fr-teal bg-fr-teal-soft text-fr-teal' : 'border-fr-line text-fr-ink-soft'}`}
               onClick={() => handleSourceChange('upload')}
             >
-              Upload Custom Files
+              Upload custom files
             </button>
           </div>
 
           {source === 'sample' ? (
-            <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">
-              Đã nạp {SAMPLE_CANDIDATES.length} hồ sơ kiểm định trên 4 nhóm nhân khẩu học giao nhau.
+            <p className="rounded-md border border-fr-line bg-white px-3 py-2 text-sm text-fr-ink-soft">
+              Đã nạp <span className="fr-mono text-fr-ink">{SAMPLE_CANDIDATES.length}</span> hồ sơ kiểm định trên 4
+              nhóm nhân khẩu học giao nhau.
             </p>
           ) : (
             <div className="space-y-2">
@@ -112,17 +113,17 @@ export function UploadDataStep() {
                 multiple
                 accept=".pdf,.docx,.txt"
                 onChange={(e) => handleFileUpload(e.target.files)}
-                className="block w-full text-sm text-gray-600"
+                className="block w-full text-sm text-fr-ink-soft"
               />
-              {uploading && <p className="text-sm text-gray-500">Đang phân tích CV đã upload…</p>}
-              {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
+              {uploading && <p className="text-sm text-fr-ink-soft">Đang phân tích CV đã upload…</p>}
+              {uploadError && <p className="text-sm text-fr-alert">{uploadError}</p>}
               {candidatesPool.length > 0 && !uploading && (
-                <p className="rounded-lg bg-blue-50 px-3 py-2 text-sm text-blue-800">
-                  Đã phân tích thành công {candidatesPool.length} file CV.
+                <p className="rounded-md border border-fr-line bg-white px-3 py-2 text-sm text-fr-ink-soft">
+                  Đã phân tích thành công <span className="fr-mono text-fr-ink">{candidatesPool.length}</span> file CV.
                 </p>
               )}
               {candidatesPool.length === 0 && !uploading && (
-                <p className="rounded-lg bg-yellow-50 px-3 py-2 text-sm text-yellow-800">
+                <p className="rounded-md border border-fr-amber bg-fr-amber-soft px-3 py-2 text-sm text-fr-ink">
                   Vui lòng upload một hoặc nhiều file CV, hoặc chuyển sang Balanced Audit Pool.
                 </p>
               )}
@@ -131,14 +132,14 @@ export function UploadDataStep() {
         </div>
       </div>
 
-      <div className="flex justify-end border-t border-gray-200 pt-4">
+      <div className="flex justify-end border-t border-fr-line pt-4">
         <button
           type="button"
           disabled={!canContinue}
           onClick={() => setStep(2)}
-          className="rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-md bg-fr-teal px-5 py-2.5 text-sm font-medium text-white hover:bg-fr-ink transition-colors disabled:cursor-not-allowed disabled:opacity-40"
         >
-          Tiếp tục: Cấu hình &amp; Chạy →
+          Tiếp tục: Cấu hình &amp; Chạy
         </button>
       </div>
     </div>

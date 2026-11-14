@@ -8,6 +8,7 @@ import { CandidateApplyPage } from './pages/CandidateApplyPage.tsx'
 import { RecruiterGate } from './pages/RecruiterGate.tsx'
 import { RecruiterDashboard } from './pages/RecruiterDashboard.tsx'
 import { RecruiterJobWorkspace } from './pages/RecruiterJobWorkspace.tsx'
+import { TalentPoolPage } from './pages/TalentPoolPage.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -19,6 +20,7 @@ createRoot(document.getElementById('root')!).render(
         <Route element={<RecruiterGate />}>
           <Route path="/recruiter" element={<RecruiterDashboard />} />
           <Route path="/recruiter/:jobId" element={<RecruiterJobWorkspace />} />
+          <Route path="/talent-pool" element={<TalentPoolPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -26,12 +26,15 @@ export function ComplianceReportTab() {
     setLoading(true)
     setError(null)
 
+    const mitigationParts: string[] = []
+    if (lastRun.redactionEnabled) mitigationParts.push('Sensitive Redaction')
+    if (lastRun.lambdaVal > 0) mitigationParts.push('Fair Reranking (Greedy Exposure)')
+
     const payload = {
       job_title: lastRun.jobTitle,
       job_description: lastRun.jobDescription,
       model_name: lastRun.modelLabel,
-      mitigation_strategy:
-        lastRun.lambdaVal > 0 ? 'Sensitive Redaction & Fair Reranking' : 'Baseline Unmitigated',
+      mitigation_strategy: mitigationParts.length > 0 ? mitigationParts.join(' & ') : 'Baseline Unmitigated',
       lambda_val: lastRun.lambdaVal,
       ranking_summary: lastRun.ranking,
     }
@@ -96,34 +99,34 @@ export function ComplianceReportTab() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-gray-900">📑 Algorithmic Compliance & Official Audit Report</h2>
-        <p className="text-sm text-gray-500">
+        <h2 className="text-lg font-semibold text-fr-ink">Algorithmic compliance &amp; official audit report</h2>
+        <p className="mt-1 text-sm text-fr-ink-soft">
           Standardized audit documentation complying with Responsible AI, EU AI Act, and EEOC non-discrimination
           guidelines.
         </p>
       </div>
 
       <div>
-        <h3 className="text-base font-semibold text-gray-900">
-          🔬 Formal Research Hypothesis Status (Holm-Bonferroni Corrected)
+        <h3 className="text-base font-semibold text-fr-ink">
+          Formal research hypothesis status (Holm-Bonferroni corrected)
         </h3>
-        <div className="mt-3 overflow-x-auto rounded-xl border border-gray-200">
-          <table className="min-w-full divide-y divide-gray-200 text-sm">
-            <thead className="bg-gray-50 text-left text-xs font-medium uppercase text-gray-500">
+        <div className="mt-3 overflow-x-auto rounded-md border border-fr-line">
+          <table className="min-w-full text-sm">
+            <thead className="border-b border-fr-line text-left text-[12px] font-medium text-fr-ink-soft">
               <tr>
                 <th className="px-4 py-2">Hypothesis</th>
-                <th className="px-4 py-2">Formal Claim</th>
-                <th className="px-4 py-2">Observed Metric</th>
+                <th className="px-4 py-2">Formal claim</th>
+                <th className="px-4 py-2">Observed metric</th>
                 <th className="px-4 py-2">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-fr-line/60">
               {hypotheses.map((h) => (
                 <tr key={h.id}>
-                  <td className="px-4 py-2 font-medium">{h.id}</td>
-                  <td className="px-4 py-2">{h.claim}</td>
-                  <td className="px-4 py-2">{h.observed}</td>
-                  <td className="px-4 py-2">{h.status}</td>
+                  <td className="fr-mono px-4 py-2 text-fr-ink">{h.id}</td>
+                  <td className="px-4 py-2 text-fr-ink-soft">{h.claim}</td>
+                  <td className="fr-mono px-4 py-2 text-fr-ink-soft">{h.observed}</td>
+                  <td className="px-4 py-2 text-fr-teal">{h.status}</td>
                 </tr>
               ))}
             </tbody>
@@ -131,27 +134,27 @@ export function ComplianceReportTab() {
         </div>
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      {loading && <p className="text-sm text-gray-500">Generating compliance reports…</p>}
+      {error && <p className="text-sm text-fr-alert">{error}</p>}
+      {loading && <p className="text-sm text-fr-ink-soft">Generating compliance reports…</p>}
 
       <div>
-        <h3 className="text-base font-semibold text-gray-900">📥 Download Formal Compliance Reports</h3>
+        <h3 className="text-base font-semibold text-fr-ink">Download formal compliance reports</h3>
         <div className="mt-3 flex flex-wrap gap-3">
           <button
             type="button"
             disabled={!markdownReport}
             onClick={() => markdownReport && downloadBlob('FairRank_Audit_Report.md', markdownReport, 'text/markdown')}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+            className="rounded-md border border-fr-line px-4 py-2 text-sm font-medium text-fr-ink-soft hover:border-fr-teal hover:text-fr-teal transition-colors disabled:opacity-40"
           >
-            📄 Download Markdown Audit (.md)
+            Download Markdown audit (.md)
           </button>
           <button
             type="button"
             disabled={!htmlReport}
             onClick={() => htmlReport && downloadBlob('FairRank_Audit_Report.html', htmlReport, 'text/html')}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+            className="rounded-md border border-fr-line px-4 py-2 text-sm font-medium text-fr-ink-soft hover:border-fr-teal hover:text-fr-teal transition-colors disabled:opacity-40"
           >
-            🌐 Download Styled HTML Report (.html)
+            Download styled HTML report (.html)
           </button>
           <button
             type="button"
@@ -162,20 +165,20 @@ export function ComplianceReportTab() {
                 'application/json',
               )
             }
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="rounded-md border border-fr-line px-4 py-2 text-sm font-medium text-fr-ink-soft hover:border-fr-teal hover:text-fr-teal transition-colors"
           >
-            📊 Download Raw Metrics (.json)
+            Download raw metrics (.json)
           </button>
         </div>
       </div>
 
       {htmlReport && (
         <div>
-          <h3 className="text-base font-semibold text-gray-900">👁️ Preview Generated Executive HTML Report</h3>
+          <h3 className="text-base font-semibold text-fr-ink">Preview generated executive HTML report</h3>
           <iframe
             title="Executive HTML Report Preview"
             srcDoc={htmlReport}
-            className="mt-3 h-[600px] w-full rounded-xl border border-gray-200"
+            className="mt-3 h-[600px] w-full rounded-md border border-fr-line"
           />
         </div>
       )}

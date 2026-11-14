@@ -14,17 +14,17 @@ interface PipelineDiagramProps {
 }
 
 const STATUS_STYLES: Record<PipelineStageStatus, string> = {
-  pending: 'border-gray-200 bg-white',
-  active: 'border-brand-600 bg-brand-50 shadow-md scale-[1.02]',
-  done: 'border-emerald-300 bg-emerald-50',
-  skipped: 'border-gray-200 bg-gray-50 opacity-50',
+  pending: 'border-fr-line bg-white',
+  active: 'border-fr-teal bg-fr-teal-soft',
+  done: 'border-fr-teal bg-white',
+  skipped: 'border-fr-line bg-fr-paper opacity-50',
 }
 
 const LABEL_STYLES: Record<PipelineStageStatus, string> = {
-  pending: 'text-gray-700',
-  active: 'text-brand-700',
-  done: 'text-emerald-800',
-  skipped: 'text-gray-500',
+  pending: 'text-fr-ink-soft',
+  active: 'text-fr-teal',
+  done: 'text-fr-ink',
+  skipped: 'text-fr-ink-soft',
 }
 
 export function PipelineDiagram({ stages, statuses }: PipelineDiagramProps) {
@@ -35,33 +35,31 @@ export function PipelineDiagram({ stages, statuses }: PipelineDiagramProps) {
         return (
           <div key={stage.id} className="flex min-w-0 flex-1 items-center">
             <div
-              className={`min-w-0 flex-1 rounded-xl border p-3 transition-all duration-300 ${STATUS_STYLES[status]}`}
+              className={`min-w-0 flex-1 rounded-md border p-3 transition-colors duration-300 ${STATUS_STYLES[status]}`}
             >
               <div className="flex min-w-0 items-center gap-2">
-                <span className="shrink-0 text-lg">{stage.icon}</span>
+                <span className="fr-mono shrink-0 text-[11px] text-fr-ink-soft">{String(idx + 1).padStart(2, '0')}</span>
                 <span
-                  className={`min-w-0 truncate text-sm font-semibold ${LABEL_STYLES[status]}`}
+                  className={`min-w-0 truncate text-sm font-medium ${LABEL_STYLES[status]}`}
                   title={stage.label}
                 >
                   {stage.label}
                 </span>
                 {status === 'active' && (
-                  <span className="ml-auto h-2 w-2 shrink-0 animate-pulse rounded-full bg-brand-600" aria-hidden />
+                  <span className="ml-auto h-2 w-2 shrink-0 animate-pulse rounded-full bg-fr-teal" aria-hidden />
                 )}
-                {status === 'done' && <span className="ml-auto shrink-0 text-emerald-600">✓</span>}
-                {status === 'skipped' && <span className="ml-auto shrink-0 text-xs text-gray-400">Bỏ qua</span>}
+                {status === 'done' && <span className="ml-auto shrink-0 text-fr-teal">✓</span>}
+                {status === 'skipped' && <span className="ml-auto shrink-0 text-[11px] text-fr-ink-soft">bỏ qua</span>}
               </div>
-              <p className="mt-1 truncate text-xs text-gray-500" title={stage.detail}>
+              <p className="mt-1.5 truncate text-xs text-fr-ink-soft" title={stage.detail}>
                 {stage.detail}
               </p>
-              <p className="mt-1 truncate font-mono text-[11px] text-gray-400" title={stage.formula}>
+              <p className="fr-mono mt-1 truncate text-[11px] text-fr-ink-soft/70" title={stage.formula}>
                 {stage.formula}
               </p>
             </div>
             {idx < stages.length - 1 && (
-              <span className="mx-1 hidden shrink-0 text-gray-300 sm:block" aria-hidden>
-                →
-              </span>
+              <span className="mx-1 hidden h-px w-3 shrink-0 bg-fr-line sm:block" aria-hidden />
             )}
           </div>
         )

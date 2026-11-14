@@ -72,16 +72,16 @@ export function ParetoFrontierTab() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-gray-900">⚖️ Utility vs. Fairness Pareto Frontier</h2>
-        <p className="text-sm text-gray-500">
+        <h2 className="text-lg font-semibold text-fr-ink">Utility vs. fairness Pareto frontier</h2>
+        <p className="mt-1 text-sm text-fr-ink-soft">
           Empirical simulation exploring the optimal balance between ranking accuracy (nDCG@10) and demographic parity
           across penalty weights (λ).
         </p>
       </div>
 
-      <div className="flex flex-wrap items-end gap-4">
-        <label className="text-sm font-medium text-gray-700">
-          Maximum Penalty λ ({lambdaMax.toFixed(1)})
+      <div className="flex flex-wrap items-end gap-5">
+        <label className="text-sm font-medium text-fr-ink-soft">
+          Maximum penalty λ (<span className="fr-mono text-fr-amber">{lambdaMax.toFixed(1)}</span>)
           <input
             type="range"
             min={1}
@@ -89,11 +89,11 @@ export function ParetoFrontierTab() {
             step={0.5}
             value={lambdaMax}
             onChange={(e) => setLambdaMax(Number(e.target.value))}
-            className="mt-1 block w-40"
+            className="mt-1.5 block w-40 accent-fr-amber"
           />
         </label>
-        <label className="text-sm font-medium text-gray-700">
-          Grid Resolution (Steps: {steps})
+        <label className="text-sm font-medium text-fr-ink-soft">
+          Grid resolution (steps: <span className="fr-mono text-fr-ink">{steps}</span>)
           <input
             type="range"
             min={5}
@@ -101,68 +101,68 @@ export function ParetoFrontierTab() {
             step={5}
             value={steps}
             onChange={(e) => setSteps(Number(e.target.value))}
-            className="mt-1 block w-40"
+            className="mt-1.5 block w-40 accent-fr-teal"
           />
         </label>
         <button
           type="button"
           onClick={runSweep}
           disabled={loading}
-          className="rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 disabled:opacity-50"
+          className="rounded-md bg-fr-teal px-5 py-2.5 text-sm font-medium text-white hover:bg-fr-ink transition-colors disabled:opacity-40"
         >
-          {loading ? 'Computing…' : '🔄 Compute Pareto Frontier'}
+          {loading ? 'Computing…' : 'Compute Pareto frontier'}
         </button>
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-fr-alert">{error}</p>}
 
       {rows.length > 0 && optimal && (
         <>
           <div>
-            <h3 className="text-base font-semibold text-gray-900">📈 Interactive Pareto Trade-off Curve</h3>
-            <div className="mt-3 rounded-xl border border-gray-200 bg-white p-2">
+            <h3 className="text-base font-semibold text-fr-ink">Interactive Pareto trade-off curve</h3>
+            <div className="mt-3 rounded-md border border-fr-line bg-white p-2">
               <ParetoScatterChart rows={rows} optimal={optimal} />
             </div>
           </div>
 
-          <p className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-800">
-            <strong>Algorithm Recommendation:</strong> Optimal operating parameter is{' '}
-            <strong>λ = {optimal.lambda_penalty}</strong>. It preserves{' '}
-            <strong>{optimal.utility_retention.toFixed(2)}%</strong> of baseline utility (nDCG@10:{' '}
-            {optimal.ndcg_at_k.toFixed(4)}) while reducing the Black-White exposure gap to{' '}
-            <strong>{optimal.black_white_exposure_gap.toFixed(4)}</strong>.
+          <p className="rounded-md border border-fr-teal bg-fr-teal-soft px-4 py-3 text-sm text-fr-ink">
+            Algorithm recommendation: optimal operating parameter is{' '}
+            <span className="fr-mono text-fr-teal">λ = {optimal.lambda_penalty}</span>. It preserves{' '}
+            <span className="fr-mono text-fr-teal">{optimal.utility_retention.toFixed(2)}%</span> of baseline utility
+            (nDCG@10: {optimal.ndcg_at_k.toFixed(4)}) while reducing the Black-White exposure gap to{' '}
+            <span className="fr-mono text-fr-teal">{optimal.black_white_exposure_gap.toFixed(4)}</span>.
           </p>
 
           <div>
             <button
               type="button"
-              className="text-sm font-medium text-brand-700 underline"
+              className="text-sm font-medium text-fr-teal hover:text-fr-ink"
               onClick={() => setTableOpen((v) => !v)}
             >
-              {tableOpen ? 'Hide' : 'View'} Complete Pareto Evaluation Table
+              {tableOpen ? 'Hide' : 'View'} complete Pareto evaluation table
             </button>
             {tableOpen && (
-              <div className="mt-2 overflow-x-auto rounded-xl border border-gray-200">
-                <table className="min-w-full divide-y divide-gray-200 text-sm">
-                  <thead className="bg-gray-50 text-left text-xs font-medium uppercase text-gray-500">
+              <div className="mt-2 overflow-x-auto rounded-md border border-fr-line">
+                <table className="min-w-full text-sm">
+                  <thead className="border-b border-fr-line text-left text-[12px] font-medium text-fr-ink-soft">
                     <tr>
                       <th className="px-4 py-2">λ</th>
-                      <th className="px-4 py-2">nDCG@10</th>
-                      <th className="px-4 py-2">Utility Retention</th>
-                      <th className="px-4 py-2">B-W Gap</th>
-                      <th className="px-4 py-2">F-M Gap</th>
-                      <th className="px-4 py-2">Intersectional Excess</th>
+                      <th className="px-4 py-2 text-right">nDCG@10</th>
+                      <th className="px-4 py-2 text-right">Utility retention</th>
+                      <th className="px-4 py-2 text-right">B-W gap</th>
+                      <th className="px-4 py-2 text-right">F-M gap</th>
+                      <th className="px-4 py-2 text-right">Intersectional excess</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="fr-mono divide-y divide-fr-line/60 text-fr-ink">
                     {rows.map((r) => (
                       <tr key={r.lambda_penalty}>
                         <td className="px-4 py-2">{r.lambda_penalty}</td>
-                        <td className="px-4 py-2">{r.ndcg_at_k.toFixed(4)}</td>
-                        <td className="px-4 py-2">{r.utility_retention.toFixed(2)}%</td>
-                        <td className="px-4 py-2">{r.black_white_exposure_gap.toFixed(4)}</td>
-                        <td className="px-4 py-2">{r.female_male_exposure_gap.toFixed(4)}</td>
-                        <td className="px-4 py-2">{r.intersectional_excess.toFixed(4)}</td>
+                        <td className="px-4 py-2 text-right">{r.ndcg_at_k.toFixed(4)}</td>
+                        <td className="px-4 py-2 text-right">{r.utility_retention.toFixed(2)}%</td>
+                        <td className="px-4 py-2 text-right">{r.black_white_exposure_gap.toFixed(4)}</td>
+                        <td className="px-4 py-2 text-right">{r.female_male_exposure_gap.toFixed(4)}</td>
+                        <td className="px-4 py-2 text-right">{r.intersectional_excess.toFixed(4)}</td>
                       </tr>
                     ))}
                   </tbody>

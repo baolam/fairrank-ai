@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -6,6 +7,29 @@
   --color-brand-500: #6e4bff;
   --color-brand-600: #5a37e6;
   --color-brand-700: #4728b8;
+
+  /* FairRank-AI audit-instrument palette — scoped to .fr-shell (the /quick-demo page only) */
+  --color-fr-paper: #eef1ea;
+  --color-fr-raised: #f8faf6;
+  --color-fr-ink: #171b18;
+  --color-fr-ink-soft: #52594f;
+  --color-fr-line: #c7d0c3;
+  --color-fr-teal: #0d7a72;
+  --color-fr-teal-soft: #dceeec;
+  --color-fr-amber: #a66a0c;
+  --color-fr-amber-soft: #f3e7cc;
+  --color-fr-alert: #b23a3a;
+  --color-fr-alert-soft: #f4dede;
+}
+
+.fr-shell {
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  background-color: var(--color-fr-paper);
+  color: var(--color-fr-ink);
+}
+
+.fr-mono {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
 }
 
 :root {

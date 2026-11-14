@@ -1,14 +1,9 @@
 import Plot from 'react-plotly.js'
 import type { GroupScoreSummary } from '../../types/api'
 import { GROUP_LABELS, type IntersectionalGroup } from '../../types/api'
+import { CHART_AXIS_BASE, CHART_FONT, CHART_SIGNAL } from '../../lib/chartTheme'
 
-const INK = {
-  primary: '#0b0b0b',
-  secondary: '#52514e',
-  grid: '#e1e0d9',
-  baseline: '#c3c2b7',
-}
-const SERIES = { baseline: '#2a78d6', mitigated: '#1baf7a' }
+const SERIES = { baseline: CHART_SIGNAL.amber, mitigated: CHART_SIGNAL.teal }
 
 interface CounterfactualBoxPlotProps {
   baseline: GroupScoreSummary[]
@@ -46,17 +41,12 @@ export function CounterfactualBoxPlot({ baseline, mitigated }: CounterfactualBox
         boxmode: 'group',
         height: 420,
         margin: { l: 56, r: 16, t: 24, b: 56 },
-        font: { family: 'system-ui, sans-serif', color: INK.primary, size: 12 },
+        font: CHART_FONT,
         legend: { orientation: 'h', y: -0.2 },
         paper_bgcolor: 'transparent',
         plot_bgcolor: 'transparent',
-        xaxis: { linecolor: INK.baseline, tickfont: { color: INK.secondary } },
-        yaxis: {
-          title: { text: 'BM25 Score' },
-          gridcolor: INK.grid,
-          zerolinecolor: INK.baseline,
-          tickfont: { color: INK.secondary },
-        },
+        xaxis: { linecolor: CHART_AXIS_BASE.zerolinecolor, tickfont: CHART_AXIS_BASE.tickfont },
+        yaxis: { title: { text: 'BM25 Score' }, ...CHART_AXIS_BASE },
       }}
       config={{ displayModeBar: false, responsive: true }}
       style={{ width: '100%' }}

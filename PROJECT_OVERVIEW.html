@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FairRank-AI</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  /* Layout concept: a single-column technical report (audit-instrument look,
+     reused from the app's own .fr-shell palette) with a sticky section-pill
+     nav, a stats strip, then long-form sections anchored for deep-linking. */
+  :root{
+    --bg:#eef1ea; --surface:#f8faf6; --surface-2:#ffffff; --ink:#171b18; --ink-soft:#52594f; --line:#c7d0c3;
+    --accent:#0d7a72; --accent-soft:#dceeec;
+    --warn:#a66a0c; --warn-soft:#f3e7cc;
+    --danger:#b23a3a; --danger-soft:#f4dede;
+    --ats:#4f46e5; --ats-soft:#e6e3fb;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#12150f; --surface:#1a1e15; --surface-2:#1f241a; --ink:#e9ece2; --ink-soft:#a7af9d; --line:#343c2d;
+      --accent:#3fd0c2; --accent-soft:#17312f;
+      --warn:#d99a3d; --warn-soft:#352a14;
+      --danger:#e4847f; --danger-soft:#3a1d1c;
+      --ats:#938cf2; --ats-soft:#232056;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12150f; --surface:#1a1e15; --surface-2:#1f241a; --ink:#e9ece2; --ink-soft:#a7af9d; --line:#343c2d;
+    --accent:#3fd0c2; --accent-soft:#17312f;
+    --warn:#d99a3d; --warn-soft:#352a14;
+    --danger:#e4847f; --danger-soft:#3a1d1c;
+    --ats:#938cf2; --ats-soft:#232056;
+    color-scheme: dark;
+  }
+
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; }
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  code, .mono, .stat-value, td.num{ font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace; }
+  .wrap{
+    max-width: 840px;
+    margin: 0 auto;
+    padding-left: max(16px, 4vw);
+    padding-right: max(16px, 4vw);
+  }
+
+  /* ---- top band ---- */
+  header.hero{
+    border-bottom: 1px solid var(--line);
+    padding-block: 40px 28px;
+    background: linear-gradient(180deg, var(--surface), var(--bg));
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+    color: var(--accent); margin:0 0 14px;
+  }
+  .eyebrow::before{ content:""; width:8px; height:8px; border-radius:50%; background:var(--accent); display:inline-block; }
+  h1.title{
+    font-size: clamp(32px, 6vw, 44px);
+    line-height:1.08;
+    margin: 0 0 10px;
+    font-weight:700;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  p.subtitle{
+    font-size: 17px;
+    color: var(--ink-soft);
+    max-width: 640px;
+    margin: 0 0 26px;
+  }
+  .stats{
+    display:grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    gap:1px;
+    background: var(--line);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  @media (max-width: 620px){ .stats{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  .stat{
+    background: var(--surface-2);
+    padding: 14px 14px 16px;
+    min-width:0;
+  }
+  .stat-value{ font-size: 22px; font-weight:600; color:var(--accent); font-variant-numeric: tabular-nums; display:block; }
+  .stat-label{ font-size:12px; color:var(--ink-soft); margin-top:4px; display:block; }
+
+  /* ---- nav ---- */
+  nav.toc{
+    position: sticky; top:0; z-index:5;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.toc .wrap{ display:flex; gap:6px; overflow-x:auto; padding-block:10px; scrollbar-width:none; }
+  nav.toc .wrap::-webkit-scrollbar{ display:none; }
+  nav.toc a{
+    flex:0 0 auto;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12.5px;
+    color: var(--ink-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    white-space:nowrap;
+  }
+  nav.toc a:hover{ color:var(--ink); border-color:var(--accent); }
+
+  /* ---- sections ---- */
+  section{ padding-block: 40px; border-bottom:1px solid var(--line); }
+  section:last-of-type{ border-bottom:none; }
+  h2{
+    font-size: 24px; margin: 0 0 6px; font-weight:700; letter-spacing:-0.01em;
+    display:flex; align-items:baseline; gap:10px;
+  }
+  h2 .no{ font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--accent); font-weight:500; }
+  h3{ font-size:16px; margin: 28px 0 10px; font-weight:600; }
+  p{ margin: 0 0 14px; max-width: 70ch; }
+  .lede{ color:var(--ink-soft); max-width:62ch; margin-bottom:24px; }
+  ul.clean{ margin:0 0 14px; padding-left:20px; }
+  ul.clean li{ margin-bottom:6px; }
+  a{ color: var(--accent); }
+
+  code.inline{
+    background: var(--surface-2); border:1px solid var(--line); border-radius:4px;
+    padding: 1px 6px; font-size: 0.86em; color: var(--ink);
+  }
+
+  blockquote{
+    margin: 0 0 20px; padding: 14px 18px; border-left:3px solid var(--accent);
+    background: var(--accent-soft); border-radius: 0 8px 8px 0; color: var(--ink);
+    font-size:15px;
+  }
+
+  /* tag chips for provenance */
+  .tag{ display:inline-flex; align-items:center; gap:6px; font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.03em; padding:2px 8px; border-radius:999px; white-space:nowrap; }
+  .tag::before{ content:""; width:6px; height:6px; border-radius:50%; }
+  .tag-ats{ background:var(--ats-soft); color:var(--ats); }
+  .tag-ats::before{ background:var(--ats); }
+  .tag-shared{ background:var(--accent-soft); color:var(--accent); }
+  .tag-shared::before{ background:var(--accent); }
+  .tag-research{ background:var(--warn-soft); color:var(--warn); }
+  .tag-research::before{ background:var(--warn); }
+  .legend{ display:flex; flex-wrap:wrap; gap:10px 18px; margin: 14px 0 22px; font-size:13px; color:var(--ink-soft); }
+  .legend span.tag{ margin-right:2px; }
+
+  /* tables */
+  .tbl-scroll{ overflow-x:auto; border:1px solid var(--line); border-radius:10px; }
+  table{ width:100%; border-collapse:collapse; font-size:14px; min-width:560px; }
+  thead th{
+    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.06em;
+    color: var(--ink-soft); background:var(--surface); padding:10px 14px; border-bottom:1px solid var(--line);
+    position:sticky; top:0;
+  }
+  tbody td{ padding:10px 14px; border-bottom:1px solid var(--line); vertical-align:top; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background: var(--surface); }
+  td.num{ font-variant-numeric: tabular-nums; white-space:nowrap; }
+
+  /* diagram */
+  figure.diagram{ margin: 0 0 10px; }
+  .diagram-scroll{ overflow-x:auto; background:var(--surface-2); border:1px solid var(--line); border-radius:12px; padding:14px; }
+  .diagram-scroll svg{ display:block; width:100%; min-width:880px; height:auto; color: var(--ink); }
+  figcaption{ font-size:13.5px; color:var(--ink-soft); margin-top:10px; max-width:70ch; }
+
+  .box-ats{ fill:var(--ats-soft); stroke:var(--ats); }
+  .box-shared{ fill:var(--accent-soft); stroke:var(--accent); }
+  .box-research{ fill:var(--warn-soft); stroke:var(--warn); }
+  .box-core{ stroke-width:2.2; }
+  .box-label{ fill:var(--ink); font-size:12.5px; font-weight:600; font-family:"IBM Plex Sans",sans-serif; }
+  .box-sub{ fill:var(--ink-soft); font-size:10.5px; font-family:"IBM Plex Mono",monospace; }
+  .lane-tag{ fill:var(--ink); font-size:11px; font-weight:600; letter-spacing:.04em; font-family:"IBM Plex Mono",monospace; }
+  .flow-label{ fill:var(--ink-soft); font-size:10.5px; font-family:"IBM Plex Mono",monospace; text-anchor:middle; }
+  .edge{ stroke:var(--ink-soft); stroke-width:1.6; fill:none; }
+  .edge-accent{ stroke:var(--accent); stroke-width:2; fill:none; }
+  .edge-dashed{ stroke:var(--ink-soft); stroke-width:1.5; fill:none; stroke-dasharray:5 4; }
+
+  /* step list */
+  ol.flow{ list-style:none; margin:0; padding:0; counter-reset: step; }
+  ol.flow li{
+    counter-increment: step; position:relative; padding-left:38px; margin-bottom:14px; font-size:14.5px;
+  }
+  ol.flow li::before{
+    content: counter(step); position:absolute; left:0; top:0;
+    width:24px; height:24px; border-radius:50%; background:var(--surface-2); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--accent);
+  }
+
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{ font-size:13px; font-family:"IBM Plex Mono",monospace; background:var(--surface-2); border:1px solid var(--line); border-radius:6px; padding:5px 10px; }
+
+  .callout{ border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:16px 18px; margin-bottom:18px; }
+  .callout h4{ margin:0 0 6px; font-size:13px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft); }
+
+  .status-row{ display:flex; gap:10px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--line); }
+  .status-row:last-child{ border-bottom:none; }
+  .status-dot{ flex:0 0 auto; width:10px; height:10px; border-radius:50%; margin-top:5px; }
+  .status-dot.done{ background:var(--accent); }
+  .status-dot.open{ background:var(--warn); }
+  .status-text b{ font-weight:600; }
+  .status-text .where{ display:block; font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-soft); margin-top:2px; }
+
+  footer{ padding-block:30px 50px; color:var(--ink-soft); font-size:13px; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Project overview</p>
+    <h1 class="title">FairRank-AI</h1>
+    <p class="subtitle">A fairness-aware resume ranking engine — one algorithmic core, audited as a research instrument and deployed as a live applicant-tracking system — built to measure, and then close, the gap between ranking utility and demographic exposure parity.</p>
+    <div class="stats">
+      <div class="stat"><span class="stat-value">0.9715</span><span class="stat-label">Baseline nDCG@10 (BM25)</span></div>
+      <div class="stat"><span class="stat-value">&minus;61.66%</span><span class="stat-label">Exposure-gap cut at &lambda;=1.0</span></div>
+      <div class="stat"><span class="stat-value">0.00%</span><span class="stat-label">Utility lost at &lambda;=1.0</span></div>
+      <div class="stat"><span class="stat-value">4</span><span class="stat-label">Intersectional groups audited</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <a href="#overview">Overview</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#components">Components</a>
+    <a href="#flows">Data flows</a>
+    <a href="#engine">Fairness engine</a>
+    <a href="#stack">Tech stack</a>
+    <a href="#status">Status</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section id="overview">
+  <h2><span class="no">01</span> Purpose &amp; objective</h2>
+  <p class="lede">FairRank-AI is two things sharing one codebase: an academic audit of algorithmic bias in resume screening, and the enterprise ATS (applicant tracking system) that same audited algorithm now runs inside.</p>
+
+  <p>The project's research identity is <code class="inline">TMG301: Fairness-Aware Semantic Resume Ranking &mdash; An Empirical Audit of Utility and Robustness</code>. Its stated objective, carried over verbatim from the project's own checkpoint report, is:</p>
+  <blockquote>Assess whether fairness interventions &mdash; Redaction, Counterfactual Data Augmentation, and Greedy Exposure-Aware Reranking &mdash; can mitigate demographic sensitivity in resume ranking without degrading ranking utility by more than 2% nDCG@10 versus an unmitigated baseline.</blockquote>
+
+  <p>That question only matters if it's tested on something people actually use, which is why the repository also contains a full recruiting product: job postings, a candidate application portal, a Kanban pipeline, interview scheduling and scorecards, and a talent pool search &mdash; with the audited ranking-and-reranking core wired directly into the screening step a recruiter clicks every day.</p>
+
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th>Who</th><th>What they do here</th></tr></thead>
+      <tbody>
+        <tr><td><b>Candidates</b></td><td>Apply to a posted job through a public portal, upload a resume, and may optionally self-declare one of four demographic groups used to audit the ranking that screens them.</td></tr>
+        <tr><td><b>Recruiters</b></td><td>Post jobs, set AI matching criteria, move applicants through a Kanban pipeline, run scorecards/interviews, and trigger the fairness-aware AI screening pass on demand.</td></tr>
+        <tr><td><b>Researchers / auditors</b></td><td>Run the standalone ranking, Pareto-sweep, and counterfactual-name-swap endpoints to characterize the same scoring-and-reranking core against EEOC/EU-AI-Act&ndash;style fairness questions.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="architecture">
+  <h2><span class="no">02</span> System architecture</h2>
+  <p class="lede">One request path, three destinations: everything a client sends passes through a single FastAPI gateway, then fans out into ATS storage, the shared ranking-and-fairness core, or the research/audit tooling built on top of that same core.</p>
+
+  <figure class="diagram">
+    <div class="diagram-scroll">
+<svg viewBox="0 0 1180 650" role="img" aria-label="Request flow from candidate and recruiter browsers through the React SPA and FastAPI gateway, fanning out into ATS storage, the shared fairness ranking core, and the research and audit pipeline, with the research pipeline reusing the same scorer and reranker, and the live screening endpoint writing reranked results back into ATS storage.">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+    </marker>
+  </defs>
+
+  <!-- clients -->
+  <rect x="90" y="16" width="260" height="44" rx="8" class="box-ats"/>
+  <text x="220" y="42" text-anchor="middle" class="box-label">Candidate Browser</text>
+
+  <rect x="830" y="16" width="260" height="44" rx="8" class="box-ats"/>
+  <text x="960" y="42" text-anchor="middle" class="box-label">Recruiter Browser</text>
+
+  <line x1="220" y1="60" x2="220" y2="88" class="edge" marker-end="url(#arrow)"/>
+  <line x1="960" y1="60" x2="960" y2="88" class="edge" marker-end="url(#arrow)"/>
+
+  <!-- SPA -->
+  <rect x="90" y="88" width="1000" height="64" rx="10" class="box-shared"/>
+  <text x="590" y="114" text-anchor="middle" class="box-label">React SPA &mdash; Vite 8 + React 19</text>
+  <text x="590" y="134" text-anchor="middle" class="box-sub">lib/apiClient.ts (axios) &middot; 6 routes &middot; X-Recruiter-Code header</text>
+
+  <line x1="590" y1="152" x2="590" y2="192" class="edge" marker-end="url(#arrow)"/>
+  <text x="620" y="176" class="flow-label" text-anchor="start">JSON / multipart</text>
+
+  <!-- gateway -->
+  <rect x="90" y="192" width="1000" height="70" rx="10" class="box-shared box-core"/>
+  <text x="590" y="220" text-anchor="middle" class="box-label">FastAPI Gateway &mdash; src/api/main.py</text>
+  <text x="590" y="240" text-anchor="middle" class="box-sub">/jobs &middot; /auth &middot; /candidates &middot; /ranking &middot; /audit &middot; /report &middot; /ingestion</text>
+
+  <line x1="240" y1="262" x2="240" y2="300" class="edge" marker-end="url(#arrow)"/>
+  <text x="240" y="284" class="flow-label">applications &middot; stages</text>
+  <line x1="580" y1="262" x2="580" y2="300" class="edge" marker-end="url(#arrow)"/>
+  <text x="580" y="284" class="flow-label">run-fair-screening</text>
+  <line x1="920" y1="262" x2="920" y2="300" class="edge" marker-end="url(#arrow)"/>
+  <text x="920" y="284" class="flow-label">ranking &middot; audit &middot; report</text>
+
+  <!-- lane headers -->
+  <rect x="90" y="300" width="300" height="36" rx="8" class="box-ats"/>
+  <text x="104" y="322" class="lane-tag">ATS STORAGE</text>
+
+  <rect x="430" y="300" width="300" height="36" rx="8" class="box-shared"/>
+  <text x="444" y="322" class="lane-tag">FAIRNESS RANKING CORE</text>
+
+  <rect x="770" y="300" width="300" height="36" rx="8" class="box-research"/>
+  <text x="784" y="322" class="lane-tag">RESEARCH &amp; AUDIT PIPELINE</text>
+
+  <!-- lane 1: ATS storage -->
+  <rect x="90" y="350" width="300" height="40" rx="8" class="box-ats"/>
+  <text x="240" y="374" text-anchor="middle" class="box-label">storage/repository.py</text>
+
+  <rect x="90" y="404" width="300" height="56" rx="8" class="box-ats"/>
+  <text x="240" y="426" text-anchor="middle" class="box-label">SQLite &middot; data/fairrank.db</text>
+  <text x="240" y="444" text-anchor="middle" class="box-sub">jobs &middot; applications &middot; scorecards &middot; interviews</text>
+
+  <rect x="90" y="474" width="300" height="40" rx="8" class="box-ats"/>
+  <text x="240" y="498" text-anchor="middle" class="box-label">cv_pdf.py &rarr; cv_streaming.py</text>
+
+  <!-- lane 2: fairness core -->
+  <rect x="430" y="350" width="300" height="40" rx="8" class="box-shared"/>
+  <text x="580" y="374" text-anchor="middle" class="box-label">BM25Ranker / SBERTRanker</text>
+
+  <rect x="430" y="404" width="300" height="40" rx="8" class="box-shared"/>
+  <text x="580" y="428" text-anchor="middle" class="box-sub">compute_min_max_normalized_scores</text>
+
+  <rect x="430" y="458" width="300" height="56" rx="8" class="box-shared box-core"/>
+  <text x="580" y="480" text-anchor="middle" class="box-label">mitigation/greedy_reranker.py</text>
+  <text x="580" y="498" text-anchor="middle" class="box-sub">&Delta;U&#7511; &minus; &lambda;&middot;&Delta;D&#7511;, cutoff K=10</text>
+
+  <rect x="430" y="528" width="300" height="40" rx="8" class="box-shared"/>
+  <text x="580" y="552" text-anchor="middle" class="box-label">evaluation/disparity.py</text>
+
+  <!-- lane 3: research -->
+  <rect x="770" y="350" width="300" height="50" rx="8" class="box-research"/>
+  <text x="920" y="370" text-anchor="middle" class="box-label">stimuli/pool_sampler + injector</text>
+  <text x="920" y="388" text-anchor="middle" class="box-sub">160 names &times; 4 groups</text>
+
+  <rect x="770" y="410" width="300" height="56" rx="8" class="box-research"/>
+  <text x="920" y="432" text-anchor="middle" class="box-label">/ranking/execute</text>
+  <text x="920" y="450" text-anchor="middle" class="box-sub">/audit/pareto-sweep &middot; /audit/counterfactual</text>
+
+  <rect x="770" y="476" width="300" height="40" rx="8" class="box-research"/>
+  <text x="920" y="500" text-anchor="middle" class="box-label">evaluation/report_generator.py</text>
+
+  <!-- cross-lane relationships, routed through the empty gutters so they never cross a box -->
+  <path d="M770,438 L750,438 L750,486 L730,486" class="edge-dashed" marker-end="url(#arrow)"/>
+  <path d="M430,548 L410,548 L410,370 L390,370" class="edge-accent" marker-end="url(#arrow)"/>
+</svg>
+    </div>
+    <figcaption>
+      Everything flows down from one gateway. The dashed connector shows the research pipeline's <code class="inline">/ranking/execute</code> calling the exact same scorer and <code class="inline">greedy_reranker.py</code> module shown in the fairness core &mdash; the research endpoints audit the identical code the live product runs. The solid connector is the one path that doesn't exist in the research pipeline: the live screening endpoint writes its reranked scores and stage moves straight back into SQLite via <code class="inline">bulk_update_ai_scores</code> and <code class="inline">bulk_update_application_stages</code>.
+    </figcaption>
+    <div class="legend">
+      <span class="tag tag-ats">ATS / production only</span>
+      <span class="tag tag-shared">Shared fairness engine</span>
+      <span class="tag tag-research">Research / audit only</span>
+    </div>
+  </figure>
+</section>
+
+<section id="components">
+  <h2><span class="no">03</span> Components</h2>
+  <p class="lede">The backend is organized by concern under <code class="inline">src/</code>; the frontend is organized by concern under <code class="inline">frontend/src/</code>. Each row below is tagged by which lane of the architecture diagram it belongs to.</p>
+
+  <h3>Backend &mdash; src/</h3>
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th>Module</th><th>Responsibility</th><th>Scope</th></tr></thead>
+      <tbody>
+        <tr><td><code class="inline">api/main.py</code></td><td>FastAPI app; mounts 7 routers, open CORS, runs <code class="inline">init_db()</code> on startup.</td><td><span class="tag tag-shared">shared</span></td></tr>
+        <tr><td><code class="inline">api/routers/jobs.py</code></td><td>Job CRUD, application intake, Kanban stage moves, scorecards/notes/interviews/emails, funnel analytics, <code class="inline">run_fair_screening_endpoint</code>.</td><td><span class="tag tag-ats">ATS</span></td></tr>
+        <tr><td><code class="inline">api/routers/auth.py</code></td><td>Single shared-secret recruiter gate via the <code class="inline">X-Recruiter-Code</code> header.</td><td><span class="tag tag-ats">ATS</span></td></tr>
+        <tr><td><code class="inline">api/routers/candidates.py</code></td><td>Cross-job talent pool search.</td><td><span class="tag tag-ats">ATS</span></td></tr>
+        <tr><td><code class="inline">api/routers/ranking.py</code></td><td>Standalone <code class="inline">/execute</code>: score &rarr; optional rerank &rarr; nDCG/MRR/exposure metrics in one call.</td><td><span class="tag tag-research">research</span></td></tr>
+        <tr><td><code class="inline">api/routers/audit.py</code></td><td><code class="inline">/pareto-sweep</code> (utility-vs-fairness curve across a &lambda; grid) and <code class="inline">/counterfactual</code> (16 canonical names across 4 groups swapped into one resume).</td><td><span class="tag tag-research">research</span></td></tr>
+        <tr><td><code class="inline">api/routers/report.py</code></td><td>Exports a ranking result as a Markdown/HTML compliance report.</td><td><span class="tag tag-research">research</span></td></tr>
+        <tr><td><code class="inline">api/routers/ingestion.py</code></td><td>Standalone resume parsing endpoints (single file, batch, raw text).</td><td><span class="tag tag-shared">shared</span></td></tr>
+        <tr><td><code class="inline">storage/repository.py</code></td><td>The sole SQLite data-access layer: ~30 functions covering CRUD, matching, re-scoring, funnel analytics, talent search.</td><td><span class="tag tag-ats">ATS</span></td></tr>
+        <tr><td><code class="inline">storage/db.py</code></td><td>Schema setup plus an additive <code class="inline">_migrate_table_columns</code> helper (no formal migration tool).</td><td><span class="tag tag-ats">ATS</span></td></tr>
+        <tr><td><code class="inline">storage/cv_pdf.py</code> / <code class="inline">cv_streaming.py</code></td><td>ReportLab-rendered PDF CV per application, including a blind (PII-stripped) mode, streamed as an HTTP download.</td><td><span class="tag tag-ats">ATS</span></td></tr>
+        <tr><td><code class="inline">models/bm25_ranker.py</code></td><td>Lexical baseline &mdash; BM25Okapi, k1=1.2, b=0.75.</td><td><span class="tag tag-shared">shared</span></td></tr>
+        <tr><td><code class="inline">models/sbert_ranker.py</code></td><td>Dense baseline &mdash; Sentence-BERT <code class="inline">all-mpnet-base-v2</code>, chunk-averaged embeddings.</td><td><span class="tag tag-shared">shared</span></td></tr>
+        <tr><td><code class="inline">mitigation/greedy_reranker.py</code></td><td>Greedy Score-Exposure Reranker: position-wise selection trading ranking utility against exposure disparity.</td><td><span class="tag tag-shared">shared</span></td></tr>
+        <tr><td><code class="inline">mitigation/cda_trainer.py</code></td><td>Counterfactual Data Augmentation objective &mdash; pairwise rank loss plus a cross-group score-invariance loss.</td><td><span class="tag tag-research">research</span></td></tr>
+        <tr><td><code class="inline">contracts/*</code></td><td>Pydantic v2 contracts: <code class="inline">stimuli</code>, <code class="inline">mitigation</code>, <code class="inline">ranking</code>, <code class="inline">evaluation</code>, <code class="inline">causal</code>, <code class="inline">llm</code>.</td><td><span class="tag tag-shared">shared</span></td></tr>
+        <tr><td><code class="inline">evaluation/disparity.py</code></td><td>Exposure-gap math across the 4 intersectional groups.</td><td><span class="tag tag-shared">shared</span></td></tr>
+        <tr><td><code class="inline">evaluation/metrics.py</code></td><td>nDCG@10, MRR.</td><td><span class="tag tag-shared">shared</span></td></tr>
+        <tr><td><code class="inline">evaluation/hypotheses.py</code></td><td>H1&ndash;H5 bootstrap hypothesis tests with Holm&ndash;Bonferroni correction.</td><td><span class="tag tag-research">research</span></td></tr>
+        <tr><td><code class="inline">evaluation/report_generator.py</code></td><td>Builds the Markdown/HTML audit report.</td><td><span class="tag tag-research">research</span></td></tr>
+        <tr><td><code class="inline">stimuli/pool_sampler.py</code></td><td>Deterministic demographic pool composition &mdash; balanced or 70/30-skewed.</td><td><span class="tag tag-research">research</span></td></tr>
+        <tr><td><code class="inline">stimuli/manifest_builder.py</code> / <code class="inline">injector.py</code></td><td>Name-injection templates, isolated per train/val/test split to prevent leakage.</td><td><span class="tag tag-research">research</span></td></tr>
+        <tr><td><code class="inline">causal/pse_estimator.py</code></td><td>Path-Specific Effect estimator (proxy vs. qualification pathway) on 60,884 PopResume profiles across 5 occupations.</td><td><span class="tag tag-research">research</span></td></tr>
+        <tr><td><code class="inline">llm/*</code></td><td><code class="inline">UnifiedLLMClient</code> (Gemini / OpenAI / offline mock), scorer, auditor, prompts.</td><td><span class="tag tag-shared">shared</span></td></tr>
+        <tr><td><code class="inline">parser/document_loader.py</code> / <code class="inline">resume_extractor.py</code></td><td>PDF/DOCX/TXT extraction, skill-taxonomy extraction, PII redaction.</td><td><span class="tag tag-shared">shared</span></td></tr>
+        <tr><td><code class="inline">data_prep/*</code></td><td>NFKC normalization, SHA-256 dedup, SOC occupation coding, 70:15:15 job-disjoint splitting.</td><td><span class="tag tag-research">research</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Frontend &mdash; frontend/src/</h3>
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th>Module</th><th>Responsibility</th><th>Scope</th></tr></thead>
+      <tbody>
+        <tr><td><code class="inline">main.tsx</code></td><td>Routes: <code class="inline">/</code>, <code class="inline">/apply</code>, <code class="inline">/quick-demo</code>, <code class="inline">/recruiter</code>, <code class="inline">/recruiter/:jobId</code>, <code class="inline">/talent-pool</code>.</td><td><span class="tag tag-shared">shared</span></td></tr>
+        <tr><td><code class="inline">App.tsx</code></td><td>Research wizard shell &mdash; 3-step <code class="inline">Stepper</code> (Upload &rarr; Configure &rarr; Compare), state in <code class="inline">useRankingStore</code> (Zustand).</td><td><span class="tag tag-research">research</span></td></tr>
+        <tr><td><code class="inline">pages/RoleSelectLanding.tsx</code></td><td>4-tile hub: ATS, Talent Pool, Candidate Portal, Audit Simulator.</td><td><span class="tag tag-shared">shared</span></td></tr>
+        <tr><td><code class="inline">pages/RecruiterDashboard.tsx</code></td><td>Job list and creation.</td><td><span class="tag tag-ats">ATS</span></td></tr>
+        <tr><td><code class="inline">pages/RecruiterJobWorkspace.tsx</code></td><td>Per-job workspace &mdash; Kanban, AI criteria, audit tab, analytics; embeds the research-wizard components to run live fairness screening.</td><td><span class="tag tag-ats">ATS</span></td></tr>
+        <tr><td><code class="inline">pages/CandidateApplyPage.tsx</code></td><td>Public application form with an animated parsing-pipeline visualization (<code class="inline">PipelineDiagram</code>).</td><td><span class="tag tag-ats">ATS</span></td></tr>
+        <tr><td><code class="inline">pages/TalentPoolPage.tsx</code></td><td>Cross-job candidate search.</td><td><span class="tag tag-ats">ATS</span></td></tr>
+        <tr><td><code class="inline">components/steps/*</code></td><td><code class="inline">UploadDataStep</code>, <code class="inline">ConfigureRunStep</code>, <code class="inline">ResultsCompareStep</code>, <code class="inline">JobApplicationsStep</code>.</td><td><span class="tag tag-research">research</span></td></tr>
+        <tr><td><code class="inline">components/tabs/*</code></td><td><code class="inline">ComplianceReportTab</code>, <code class="inline">CounterfactualTab</code>, <code class="inline">ParetoFrontierTab</code>.</td><td><span class="tag tag-research">research</span></td></tr>
+        <tr><td><code class="inline">components/ats/*</code></td><td><code class="inline">CandidateDetailDrawer</code>, <code class="inline">JobAICriteriaEditor</code>, <code class="inline">JobSettingsModal</code>.</td><td><span class="tag tag-ats">ATS</span></td></tr>
+        <tr><td><code class="inline">components/charts/*</code></td><td><code class="inline">GroupExposureBarChart</code>, <code class="inline">CounterfactualBoxPlot</code>, <code class="inline">ParetoScatterChart</code> (Plotly) plus <code class="inline">lib/chartTheme.ts</code>.</td><td><span class="tag tag-shared">shared</span></td></tr>
+        <tr><td><code class="inline">lib/apiClient.ts</code></td><td>Single axios instance; injects <code class="inline">X-Recruiter-Code</code>; covers every backend router.</td><td><span class="tag tag-shared">shared</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <h4>Auth model</h4>
+    <p style="margin-bottom:0">Deliberately minimal and self-documented as demo-grade: one shared secret (<code class="inline">RECRUITER_ACCESS_CODE</code>, env-configurable, default <code class="inline">fairrank-demo</code>) checked against the <code class="inline">X-Recruiter-Code</code> header by <code class="inline">require_recruiter_access</code>. A query-param variant exists only to support direct PDF-download links. There are no per-user accounts, sessions, or tokens &mdash; every recruiter shares one passphrase. Candidate-facing endpoints (browse jobs, apply) are fully public.</p>
+  </div>
+
+  <div class="callout">
+    <h4>Testing</h4>
+    <p style="margin-bottom:0"><code class="inline">tests/test_api.py</code> runs FastAPI's <code class="inline">TestClient</code> against the live app: a health check, <code class="inline">/v1/ingestion/parse-text</code> (name/skill extraction), and a full <code class="inline">/v1/ranking/execute</code> pass with named demographic candidates (e.g. a candidate named "Lakisha Washington" tagged group "Black Female"). The project's checkpoint report additionally describes unit suites for contracts, metrics, and reranker invariants, but only <code class="inline">test_api.py</code> is present in this snapshot.</p>
+  </div>
+</section>
+
+<section id="flows">
+  <h2><span class="no">04</span> Data flows</h2>
+  <p class="lede">Two journeys cover almost everything the system does; a third explains why the research endpoints exist at all.</p>
+
+  <h3>A &middot; A candidate applies to a job</h3>
+  <ol class="flow">
+    <li><code class="inline">CandidateApplyPage.tsx</code> &mdash; pick a job, upload a resume, optionally self-declare a demographic group.</li>
+    <li>Client-side preview via <code class="inline">parseResumeFile()</code> before anything is sent.</li>
+    <li><code class="inline">POST /v1/jobs/{job_id}/applications</code> (multipart) &rarr; <code class="inline">jobs.py:submit_application</code>.</li>
+    <li><code class="inline">document_loader</code>: <code class="inline">validate_resume_file</code> &rarr; <code class="inline">load_text_from_bytes</code> &rarr; <code class="inline">ensure_extractable_text</code>.</li>
+    <li><code class="inline">resume_extractor</code>: <code class="inline">extract_skills</code> / <code class="inline">extract_skills_semantic</code> / <code class="inline">extract_experience_years</code> / <code class="inline">redact_sensitive_information</code>.</li>
+    <li><code class="inline">repository.calculate_candidate_match</code> scores the resume against the job's <code class="inline">ai_criteria</code>.</li>
+    <li><code class="inline">repository.create_application</code> inserts the row into SQLite (guards repeat emails with <code class="inline">DuplicateApplicationError</code>).</li>
+    <li>The original PDF is persisted to <code class="inline">data/resumes/{id}.pdf</code>; the response returns an <code class="inline">ApplicationSubmitResponse</code>.</li>
+  </ol>
+
+  <h3>B &middot; A recruiter runs fairness-aware screening</h3>
+  <ol class="flow">
+    <li><code class="inline">RecruiterJobWorkspace.tsx</code> &rarr; <code class="inline">runFairScreening()</code>.</li>
+    <li><code class="inline">POST /v1/jobs/{job_id}/run-fair-screening</code> &rarr; <code class="inline">jobs.py:run_fair_screening_endpoint</code>.</li>
+    <li>Filters applications by stage; builds the text pool, optionally redacted of names/PII.</li>
+    <li><code class="inline">BM25Ranker</code> or <code class="inline">get_sbert_ranker()</code> scores every candidate against the job description.</li>
+    <li><code class="inline">compute_min_max_normalized_scores</code> rescales the raw scores to [0,1].</li>
+    <li>Builds one <code class="inline">RerankerCandidateInput</code> per candidate &mdash; using the self-declared group, or (as of this session's fix) distributing undeclared candidates round-robin across all four groups instead of defaulting them all into one group.</li>
+    <li><code class="inline">run_greedy_exposure_reranking(&lambda;)</code> reorders the top-K pool, trading ranking utility against exposure disparity.</li>
+    <li>Re-derives matched/missing skills per candidate, then writes back via <code class="inline">bulk_update_application_stages</code> + <code class="inline">bulk_update_ai_scores</code>.</li>
+    <li>Results land on the Kanban board; <code class="inline">get_job_funnel_analytics</code> surfaces adverse-impact (4/5ths-rule) signals.</li>
+  </ol>
+
+  <h3>C &middot; The research &amp; audit pipeline</h3>
+  <p>This is not a separate system &mdash; it's the same scorer and the same <code class="inline">greedy_reranker.py</code> called standalone, without a stored job or application behind it. <code class="inline">/ranking/execute</code> runs the pipeline once and returns nDCG/MRR/exposure metrics directly; <code class="inline">/audit/pareto-sweep</code> repeats it across a grid of &lambda; values to trace the utility-vs-fairness curve shown in <code class="inline">ParetoFrontierTab</code>; <code class="inline">/audit/counterfactual</code> swaps 16 canonical names across the 4 groups into one resume body to measure name-driven score sensitivity directly, shown in <code class="inline">CounterfactualTab</code>; and <code class="inline">report.py</code> turns any of those results into a Markdown/HTML compliance report for <code class="inline">ComplianceReportTab</code>. In short: the research pipeline is how this project proves what the live screening endpoint is actually doing.</p>
+</section>
+
+<section id="engine">
+  <h2><span class="no">05</span> Fairness engine mechanics</h2>
+  <p class="lede">Everything above routes through one algorithm. Here's what it's actually optimizing, and what it measured on the project's own baseline audit.</p>
+
+  <p>Candidates are scored, normalized to [0,1], then filled into ranked positions 1&hellip;K one at a time. At each position <i>t</i>, the reranker picks whichever remaining candidate maximizes</p>
+  <blockquote>&Delta;U&#7511; &minus; &lambda;&middot;&Delta;D&#7511;</blockquote>
+  <p>where U is cumulative, position-discounted ranking utility and D is the cumulative squared deviation of each group's exposure share from its fair share &mdash; discounted by the same weight <code class="inline">w(t) = 1 / log2(t+1)</code> used to compute utility. <code class="inline">&lambda;</code> is the only knob: at <code class="inline">&lambda;=0</code> the reranker is just a sort by score; as <code class="inline">&lambda;</code> grows, it increasingly sacrifices top-of-list score to even out exposure across groups. Group membership is one of exactly four closed <code class="inline">IntersectionalGroup</code> values &mdash; Black Female, Black Male, White Female, White Male &mdash; a fixed research construct used consistently across stimuli generation, the causal estimator, and every evaluation module.</p>
+
+  <h3>What the baseline audit found</h3>
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th>Metric</th><th>Value</th><th>Experiment</th></tr></thead>
+      <tbody>
+        <tr><td>Baseline nDCG@10</td><td class="num">0.9715</td><td><code class="inline">03_run_baseline_audit.py</code></td></tr>
+        <tr><td>Baseline MRR</td><td class="num">1.0000</td><td><code class="inline">03_run_baseline_audit.py</code></td></tr>
+        <tr><td>Signed Black&ndash;White exposure gap</td><td class="num">&minus;0.0400</td><td><code class="inline">03_run_baseline_audit.py</code></td></tr>
+        <tr><td>Maximum intersectional gap</td><td class="num">0.0982</td><td><code class="inline">03_run_baseline_audit.py</code></td></tr>
+        <tr><td>Black&ndash;White exposure gap, unmitigated</td><td class="num">0.1545</td><td><code class="inline">05_evaluate_mitigations.py</code></td></tr>
+        <tr><td>Black&ndash;White exposure gap, &lambda;=1.0</td><td class="num">0.0592 (&minus;61.66%)</td><td><code class="inline">05_evaluate_mitigations.py</code></td></tr>
+        <tr><td>Relative utility lost at &lambda;=1.0</td><td class="num">0.00% (budget: &le;2%)</td><td><code class="inline">05_evaluate_mitigations.py</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:14px;font-size:13.5px;color:var(--ink-soft)">Figures are carried over from the project's own <code class="inline">PROJECT_REPORT_CHECKPOINT_2.md</code>; the two experiments use different evaluation pools, which is why the unmitigated exposure gap differs between rows.</p>
+</section>
+
+<section id="stack">
+  <h2><span class="no">06</span> Technology stack</h2>
+
+  <h3>Backend</h3>
+  <div class="chips">
+    <span class="chip">Python</span><span class="chip">FastAPI</span><span class="chip">uvicorn</span><span class="chip">Pydantic v2</span>
+    <span class="chip">SQLite</span><span class="chip">rank-bm25</span><span class="chip">sentence-transformers</span><span class="chip">torch</span>
+    <span class="chip">numpy</span><span class="chip">pandas</span><span class="chip">scipy</span><span class="chip">ReportLab</span>
+    <span class="chip">pypdf</span><span class="chip">python-docx</span><span class="chip">google-generativeai</span><span class="chip">openai</span>
+    <span class="chip">Streamlit</span><span class="chip">plotly</span><span class="chip">pytest</span>
+  </div>
+
+  <h3>Frontend</h3>
+  <div class="chips">
+    <span class="chip">React 19</span><span class="chip">Vite 8</span><span class="chip">TypeScript</span><span class="chip">Tailwind CSS v4</span>
+    <span class="chip">react-router-dom v7</span><span class="chip">zustand v5</span><span class="chip">axios</span>
+    <span class="chip">plotly.js</span><span class="chip">react-plotly.js</span><span class="chip">oxlint</span>
+  </div>
+</section>
+
+<section id="status">
+  <h2><span class="no">07</span> Status &amp; recent hardening</h2>
+  <p class="lede">A correctness review of the current working tree surfaced eight findings. Two were fixed in this session; the rest remain open.</p>
+
+  <div class="status-row">
+    <span class="status-dot done"></span>
+    <span class="status-text"><b>Fixed</b> &mdash; undeclared <code class="inline">declared_group</code> no longer collapses onto <code class="inline">WHITE_MALE</code> in the live reranker; undeclared candidates are now split round-robin across all four groups.
+      <span class="where">src/api/routers/jobs.py &middot; run_fair_screening_endpoint</span></span>
+  </div>
+  <div class="status-row">
+    <span class="status-dot done"></span>
+    <span class="status-text"><b>Fixed</b> &mdash; candidate name, title, contact fields, AI rationale, skills, and resume body are now XML-escaped before being embedded in ReportLab Paragraph markup, so a stray <code class="inline">&lt;</code> or <code class="inline">&amp;</code> in a resume can no longer drop content or crash PDF generation.
+      <span class="where">src/storage/cv_pdf.py &middot; _safe()</span></span>
+  </div>
+  <div class="status-row">
+    <span class="status-dot open"></span>
+    <span class="status-text"><b>Open</b> &mdash; a new scorecard overwrites <code class="inline">applications.overall_rating</code> with only the latest evaluator's average, discarding prior evaluators' scores.
+      <span class="where">src/storage/repository.py &middot; create_scorecard</span></span>
+  </div>
+  <div class="status-row">
+    <span class="status-dot open"></span>
+    <span class="status-text"><b>Open</b> &mdash; scheduling an interview always sets the UI's local stage to "interviewing," even when the backend left a later-stage candidate's stage unchanged.
+      <span class="where">frontend/src/components/ats/CandidateDetailDrawer.tsx &middot; handleScheduleInterview</span></span>
+  </div>
+  <div class="status-row">
+    <span class="status-dot open"></span>
+    <span class="status-text"><b>Open</b> &mdash; the apply page's error handler shows the generic axios error instead of the backend's localized <code class="inline">detail</code> message (e.g. on a duplicate-email 409).
+      <span class="where">frontend/src/pages/CandidateApplyPage.tsx</span></span>
+  </div>
+  <div class="status-row">
+    <span class="status-dot open"></span>
+    <span class="status-text"><b>Open</b> &mdash; re-scoring or fair-screening rebuilds a fresh BM25 ranker per candidate instead of reusing the batch ranker already built earlier in the same request.
+      <span class="where">src/storage/repository.py &middot; calculate_candidate_match</span></span>
+  </div>
+  <div class="status-row">
+    <span class="status-dot open"></span>
+    <span class="status-text"><b>Open</b> &mdash; the stored-PDF download path builds its <code class="inline">Content-Disposition</code> filename from unsanitized <code class="inline">candidate_name</code>, unlike the on-the-fly path a few lines below it.
+      <span class="where">src/api/cv_streaming.py</span></span>
+  </div>
+  <div class="status-row">
+    <span class="status-dot open"></span>
+    <span class="status-text"><b>Open</b> &mdash; the pipeline-stage list is hand-duplicated in three places across two languages, so a new stage can silently fall out of funnel tracking if one copy is missed.
+      <span class="where">frontend/src/pages/RecruiterJobWorkspace.tsx &middot; PASSED_STAGES</span></span>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">Generated from the FairRank-AI codebase at <code class="inline">E:\tmg-cv-jd</code>.</div>
+</footer>
+
+</body>
+</html>

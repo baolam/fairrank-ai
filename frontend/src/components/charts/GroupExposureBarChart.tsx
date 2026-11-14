@@ -1,14 +1,9 @@
 import Plot from 'react-plotly.js'
 import type { GroupSummaryOutput } from '../../types/api'
 import { GROUP_LABELS, INTERSECTIONAL_GROUPS } from '../../types/api'
+import { CHART_AXIS_BASE, CHART_FONT, CHART_SIGNAL } from '../../lib/chartTheme'
 
-const INK = {
-  primary: '#0b0b0b',
-  secondary: '#52514e',
-  grid: '#e1e0d9',
-  baseline: '#c3c2b7',
-}
-const SERIES = { exposure: '#2a78d6', selection: '#eb6834' }
+const SERIES = { exposure: CHART_SIGNAL.teal, selection: CHART_SIGNAL.amber }
 
 interface GroupExposureBarChartProps {
   summaries: GroupSummaryOutput[]
@@ -46,16 +41,12 @@ export function GroupExposureBarChart({ summaries }: GroupExposureBarChartProps)
         barmode: 'group',
         height: 360,
         margin: { l: 48, r: 16, t: 16, b: 48 },
-        font: { family: 'system-ui, sans-serif', color: INK.primary, size: 12 },
+        font: CHART_FONT,
         legend: { orientation: 'h', y: -0.2 },
         paper_bgcolor: 'transparent',
         plot_bgcolor: 'transparent',
-        xaxis: { linecolor: INK.baseline, tickfont: { color: INK.secondary } },
-        yaxis: {
-          gridcolor: INK.grid,
-          zerolinecolor: INK.baseline,
-          tickfont: { color: INK.secondary },
-        },
+        xaxis: { linecolor: CHART_AXIS_BASE.zerolinecolor, tickfont: CHART_AXIS_BASE.tickfont },
+        yaxis: CHART_AXIS_BASE,
       }}
       config={{ displayModeBar: false, responsive: true }}
       style={{ width: '100%' }}

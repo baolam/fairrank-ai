@@ -41,7 +41,10 @@ export function ConfigureRunStep() {
     }
   }
 
-  const modelLabel = MODEL_OPTIONS.find((m) => m.value === modelOption)?.label ?? modelOption
+  // The actual scorer that runs is always BM25 or SBERT — "Greedy Fair Reranker" is a
+  // convenience dropdown shortcut that just bumps λ (see handleModelChange), not a scoring
+  // model. Label the scoring stage and the saved run with the real scorer, never the shortcut.
+  const modelLabel = modelOption === 'sbert' ? 'Sentence-BERT (all-mpnet-base-v2)' : 'BM25 (Lexical Baseline)'
   const rerankActive = lambdaVal > 0
   const activeSequence = rerankActive ? STAGE_SEQUENCE : STAGE_SEQUENCE.filter((i) => i !== 1)
 
@@ -146,34 +149,31 @@ export function ConfigureRunStep() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-gray-900">⚙️ Bước 2 · Cấu hình &amp; Chạy xử lý</h2>
-        <p className="text-sm text-gray-500">
+        <h2 className="text-base font-semibold text-fr-ink">Bước 2 · Cấu hình &amp; chạy xử lý</h2>
+        <p className="mt-1 text-sm text-fr-ink-soft">
           Chọn mô hình xếp hạng và tham số công bằng, sau đó chạy pipeline đánh giá.
         </p>
       </div>
 
-      <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700">
+      <div className="rounded-md border border-fr-line bg-white p-4 text-sm text-fr-ink-soft">
         <p>
-          <strong>Job Title:</strong> {jobTitle || '—'}
+          <span className="text-fr-ink">Job title:</span> {jobTitle || '—'}
         </p>
         <p className="mt-1">
-          <strong>Candidate Pool:</strong> {candidatesPool.length} hồ sơ (
+          <span className="text-fr-ink">Candidate pool:</span>{' '}
+          <span className="fr-mono text-fr-ink">{candidatesPool.length}</span> hồ sơ (
           {Array.from(new Set(candidatesPool.map((c) => GROUP_LABELS[c.group]))).join(', ') || 'chưa có dữ liệu'})
         </p>
-        <button
-          type="button"
-          className="mt-2 text-sm font-medium text-brand-700 underline"
-          onClick={() => setStep(1)}
-        >
+        <button type="button" className="mt-2 text-sm font-medium text-fr-teal hover:text-fr-ink" onClick={() => setStep(1)}>
           ← Sửa lại dữ liệu
         </button>
       </div>
 
-      <div className="flex flex-wrap items-end gap-4">
-        <label className="text-sm font-medium text-gray-700">
-          Ranking Engine
+      <div className="flex flex-wrap items-end gap-5">
+        <label className="text-sm font-medium text-fr-ink-soft">
+          Ranking engine
           <select
-            className="mt-1 block rounded-lg border border-gray-300 px-3 py-2 text-sm"
+            className="mt-1 block rounded-md border border-fr-line bg-white px-3 py-2 text-sm text-fr-ink focus:border-fr-teal focus:outline-none"
             value={modelOption}
             onChange={(e) => handleModelChange(e.target.value as ModelOption)}
           >
@@ -185,13 +185,18 @@ export function ConfigureRunStep() {
           </select>
         </label>
 
-        <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
-          <input type="checkbox" checked={redaction} onChange={(e) => setRedaction(e.target.checked)} />
-          🛡️ Enable Sensitive Redaction
+        <label className="flex items-center gap-2 text-sm font-medium text-fr-ink-soft">
+          <input
+            type="checkbox"
+            checked={redaction}
+            onChange={(e) => setRedaction(e.target.checked)}
+            className="accent-fr-teal"
+          />
+          Enable sensitive redaction
         </label>
 
-        <label className="text-sm font-medium text-gray-700">
-          Fairness Penalty λ ({lambdaVal.toFixed(1)})
+        <label className="text-sm font-medium text-fr-ink-soft">
+          Fairness penalty λ (<span className="fr-mono text-fr-amber">{lambdaVal.toFixed(1)}</span>)
           <input
             type="range"
             min={0}
@@ -199,43 +204,43 @@ export function ConfigureRunStep() {
             step={0.1}
             value={lambdaVal}
             onChange={(e) => setLambdaVal(Number(e.target.value))}
-            className="mt-1 block w-40"
+            className="mt-1.5 block w-40 accent-fr-amber"
           />
         </label>
 
-        <label className="text-sm font-medium text-gray-700">
-          Top-K Cutoff
+        <label className="text-sm font-medium text-fr-ink-soft">
+          Top-K cutoff
           <input
             type="number"
             min={1}
             max={20}
             value={cutoffK}
             onChange={(e) => setCutoffK(Number(e.target.value))}
-            className="mt-1 block w-20 rounded-lg border border-gray-300 px-2 py-2 text-sm"
+            className="mt-1 block w-20 rounded-md border border-fr-line bg-white px-2 py-2 text-sm text-fr-ink focus:border-fr-teal focus:outline-none"
           />
         </label>
       </div>
 
       <div>
-        <h3 className="text-sm font-semibold text-gray-900">🧮 Pipeline sẽ chạy qua các giai đoạn sau</h3>
-        <div className="mt-2">
+        <h3 className="text-sm font-medium text-fr-ink">Pipeline sẽ chạy qua các giai đoạn sau</h3>
+        <div className="mt-2.5">
           <PipelineDiagram stages={stageDefs} statuses={statuses} />
         </div>
       </div>
 
-      {runError && <p className="text-sm text-red-600">{runError}</p>}
+      {runError && <p className="text-sm text-fr-alert">{runError}</p>}
 
-      <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-        <button type="button" className="text-sm font-medium text-gray-500 hover:text-gray-800" onClick={() => setStep(1)}>
+      <div className="flex items-center justify-between border-t border-fr-line pt-4">
+        <button type="button" className="text-sm font-medium text-fr-ink-soft hover:text-fr-ink" onClick={() => setStep(1)}>
           ← Quay lại
         </button>
         <button
           type="button"
           onClick={handleRun}
           disabled={running || candidatesPool.length === 0}
-          className="rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-md bg-fr-teal px-5 py-2.5 text-sm font-medium text-white hover:bg-fr-ink transition-colors disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {phase === 'running' ? 'Đang chạy…' : phase === 'done' ? 'Hoàn tất ✓' : '🚀 Run Ranking & Audit Pipeline'}
+          {phase === 'running' ? 'Đang chạy…' : phase === 'done' ? 'Hoàn tất ✓' : 'Run ranking & audit pipeline'}
         </button>
       </div>
     </div>

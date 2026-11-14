@@ -3,7 +3,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.api.routers import ingestion, ranking, audit, report, jobs, auth
+from src.api.routers import ingestion, ranking, audit, report, jobs, auth, candidates
 from src.storage.db import init_db
 
 
@@ -38,6 +38,7 @@ app.include_router(audit.router)
 app.include_router(report.router)
 app.include_router(jobs.router)
 app.include_router(auth.router)
+app.include_router(candidates.router)
 
 
 @app.get("/", tags=["System"])

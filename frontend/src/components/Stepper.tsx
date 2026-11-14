@@ -20,52 +20,45 @@ interface StepperProps {
 
 export function Stepper({ currentStep, canNavigateTo, onNavigate }: StepperProps) {
   return (
-    <ol className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-stretch sm:gap-0">
-      {STEPS.map((step, idx) => {
+    <ol className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-stretch sm:gap-0">
+      {STEPS.map((step) => {
         const isCompleted = step.id < currentStep
         const isCurrent = step.id === currentStep
         const isUnlocked = canNavigateTo(step.id)
         const clickable = isUnlocked && !isCurrent
 
         return (
-          <li key={step.id} className="flex flex-1 items-center">
+          <li key={step.id} className="flex flex-1 flex-col">
             <button
               type="button"
               disabled={!clickable}
               onClick={() => clickable && onNavigate(step.id)}
-              className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${
-                isCurrent
-                  ? 'border-brand-600 bg-brand-50'
-                  : isCompleted
-                    ? 'border-emerald-200 bg-emerald-50 hover:bg-emerald-100'
-                    : 'border-gray-200 bg-gray-50 opacity-60'
-              } ${clickable ? 'cursor-pointer' : 'cursor-default'}`}
+              className={`flex w-full items-center gap-2.5 py-2 text-left transition-colors ${clickable ? 'cursor-pointer' : 'cursor-default'}`}
             >
               <span
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
+                className={`fr-mono flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[12px] ${
                   isCurrent
-                    ? 'bg-brand-600 text-white'
+                    ? 'border-fr-teal bg-fr-teal text-white'
                     : isCompleted
-                      ? 'bg-emerald-600 text-white'
-                      : 'bg-gray-300 text-gray-600'
+                      ? 'border-fr-teal text-fr-teal'
+                      : 'border-fr-line text-fr-ink-soft'
                 }`}
               >
                 {isCompleted ? '✓' : step.id}
               </span>
               <span>
-                <span
-                  className={`block text-sm font-semibold ${
-                    isCurrent ? 'text-brand-700' : isCompleted ? 'text-emerald-800' : 'text-gray-500'
-                  }`}
-                >
+                <span className={`block text-[13px] font-medium ${isCurrent ? 'text-fr-ink' : 'text-fr-ink-soft'}`}>
                   {step.label}
                 </span>
-                <span className="block text-xs text-gray-500">{step.description}</span>
+                <span className="block text-[11px] text-fr-ink-soft">{step.description}</span>
               </span>
             </button>
-            {idx < STEPS.length - 1 && (
-              <span className="mx-2 hidden h-px w-6 shrink-0 bg-gray-300 sm:block" aria-hidden />
-            )}
+            <span
+              className={`mt-1 h-[3px] w-full rounded-full ${
+                isCurrent || isCompleted ? 'bg-fr-teal' : 'bg-fr-line'
+              }`}
+              aria-hidden
+            />
           </li>
         )
       })}
